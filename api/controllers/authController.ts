@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import User from '../models/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { shouldUseMockData } from '../config/database';
@@ -28,8 +27,8 @@ export const register = async (req: Request, res: Response) => {
       
       res.status(201).json({ id: user.id, email: user.email });
     } else {
-      // Usar banco de dados
-      const existingUser = await User.findOne({ where: { email } });
+      // Para Vercel, sempre usar dados mock por enquanto
+      const existingUser = await MockDataService.getUserByEmail(email);
       if (existingUser) {
         return res.status(400).json({ error: 'Email already in use' });
       }
@@ -38,7 +37,7 @@ export const register = async (req: Request, res: Response) => {
       const hashedPassword = await bcrypt.hash(password, 10);
       
       // Criar o usuário
-      const user = await User.create({
+      const user = await MockDataService.createUser({
         email,
         password: hashedPassword,
       });
@@ -65,12 +64,12 @@ export const login = async (req: Request, res: Response) => {
       if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
 
       // Gerar o token JWT
-      const token = jwt.sign({ id: user.id, email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
+      const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET || 'your_jwt_secret', { expiresIn: '1h' });
 
       res.json({ token });
     } else {
-      // Usar banco de dados
-      const user = await User.findOne({ where: { email } });
+      // Para Vercel, sempre usar dados mock por enquanto
+      const user = await MockDataService.getUserByEmail(email);
       if (!user) return res.status(404).json({ error: 'User not found' });
 
       // Verificar a senha
@@ -78,7 +77,7 @@ export const login = async (req: Request, res: Response) => {
       if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
 
       // Gerar o token JWT
-      const token = jwt.sign({ id: user.id, email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
+      const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET || 'your_jwt_secret', { expiresIn: '1h' });
 
       res.json({ token });
     }

@@ -40,7 +40,7 @@ const ProductsPage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:3001/api/products?page=${page}`,
+        `${process.env.NEXT_PUBLIC_API_URL || '/api'}/products?page=${page}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -60,7 +60,7 @@ const ProductsPage = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:3001/api/products",
+        `${process.env.NEXT_PUBLIC_API_URL || '/api'}/products`,
         { name, description, price, imageUrl },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -76,7 +76,7 @@ const ProductsPage = () => {
       try {
         const token = localStorage.getItem("token");
         await axios.put(
-          `http://localhost:3001/api/products/${selectedProduct.id}`,
+          `${process.env.NEXT_PUBLIC_API_URL || '/api'}/products/${selectedProduct.id}`,
           { name, description, price, imageUrl },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -93,7 +93,7 @@ const ProductsPage = () => {
       try {
         const token = localStorage.getItem("token");
         await axios.delete(
-          `http://localhost:3001/api/products/${selectedProduct.id}`,
+          `${process.env.NEXT_PUBLIC_API_URL || '/api'}/products/${selectedProduct.id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setOpenDeleteModal(false); // Fecha o modal de exclusão após excluir o produto

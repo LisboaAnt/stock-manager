@@ -1,8 +1,8 @@
 import express from 'express';
-import { login, register } from '../controllers/authController';
-import { createProduct, getProducts, updateProduct, deleteProduct } from '../controllers/productController';
-import authenticateToken from '../middleware/auth';
-import { shouldUseMockData, isDatabaseAvailable } from '../config/database';
+import { login, register } from './controllers/authController';
+import { createProduct, getProducts, updateProduct, deleteProduct } from './controllers/productController';
+import authenticateToken from './middleware/auth';
+import { shouldUseMockData, isDatabaseAvailable } from './config/database';
 
 const router = express.Router();
 

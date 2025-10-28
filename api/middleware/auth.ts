@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 interface UserPayload {
   id: number;
-  username: string;
+  email: string;
 }
 
 const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
@@ -13,7 +13,6 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
 
   jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret', (err, decoded) => {
     if (err) return res.sendStatus(403); // Proibido
-
 
     if (decoded) {
       (req as any).user = decoded as UserPayload;

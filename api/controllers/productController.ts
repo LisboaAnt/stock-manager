@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import Product from '../models/Product';
 import { shouldUseMockData } from '../config/database';
 import { MockDataService } from '../config/mockData';
 
@@ -23,8 +22,8 @@ export const createProduct = async (req: Request, res: Response) => {
         imageUrl,
       });
     } else {
-      // Usar banco de dados
-      product = await Product.create({
+      // Para Vercel, sempre usar dados mock por enquanto
+      product = await MockDataService.createProduct({
         name,
         description,
         price: numericPrice,
@@ -54,8 +53,13 @@ export const getProducts = async (req: Request, res: Response) => {
       
       res.json({ count, rows });
     } else {
-      // Usar banco de dados
-      const { count, rows } = await Product.findAndCountAll({ limit: Number(limit), offset });
+      // Para Vercel, sempre usar dados mock por enquanto
+      const allProducts = await MockDataService.getAllProducts();
+      const startIndex = offset;
+      const endIndex = startIndex + Number(limit);
+      const rows = allProducts.slice(startIndex, endIndex);
+      const count = allProducts.length;
+      
       res.json({ count, rows });
     }
   } catch (error) {
@@ -81,16 +85,15 @@ export const updateProduct = async (req: Request, res: Response) => {
       if (!product) return res.status(404).json({ error: 'Product not found' });
       res.json(product);
     } else {
-      // Usar banco de dados
-      const product = await Product.findByPk(id);
+      // Para Vercel, sempre usar dados mock por enquanto
+      const product = await MockDataService.updateProduct(Number(id), {
+        name,
+        description,
+        price: parseFloat(price),
+        imageUrl,
+      });
+      
       if (!product) return res.status(404).json({ error: 'Product not found' });
-
-      product.name = name;
-      product.description = description;
-      product.price = parseFloat(price);
-      product.imageUrl = imageUrl;
-
-      await product.save();
       res.json(product);
     }
   } catch (error) {
@@ -113,11 +116,9 @@ export const deleteProduct = async (req: Request, res: Response) => {
         res.status(404).json({ message: 'Product not found' });
       }
     } else {
-      // Usar banco de dados
-      const result = await Product.destroy({
-        where: { id: id },
-      });
-
+      // Para Vercel, sempre usar dados mock por enquanto
+      const result = await MockDataService.deleteProduct(Number(id));
+      
       if (result) {
         res.status(200).json({ message: 'Product deleted successfully' });
       } else {

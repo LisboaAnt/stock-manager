@@ -15,7 +15,7 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/api/login', { email, password });
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || '/api'}/login`, { email, password });
       const { token } = response.data;
 
       localStorage.setItem('token', token);
@@ -35,7 +35,7 @@ const LoginPage = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/api/register', { email: newEmail, password: newPassword });
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || '/api'}/register`, { email: newEmail, password: newPassword });
       console.log('Register Successful', response.data);
       setShowRegister(false);
     } catch (error) {
