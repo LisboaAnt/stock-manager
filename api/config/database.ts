@@ -1,46 +1,54 @@
-import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-type Dialect = 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql';
+// Por padrão na Vercel usamos MOCK (sem DB). Para habilitar DB, defina USE_DB=true.
+const USE_DB = process.env.USE_DB === 'true';
 
-const dialect: Dialect = (process.env.DB_DIALECT as Dialect) || 'mysql';
-
-const sequelize = new Sequelize(
-  process.env.DB_NAME || 'default_db_name',
-  process.env.DB_USER || 'default_user',
-  process.env.DB_PASSWORD || 'default_password', 
-  {
-    host: process.env.DB_HOST || 'localhost',
-    dialect: dialect,
-    port: Number(process.env.DB_PORT) || 3306,
-  }
-);
-
+let sequelize: any = null;
 let isDatabaseConnected = false;
-let useMockData = false;
+let useMockData = !USE_DB; // se não explicitamente habilitado, usa mock
 
-const testConnection = async () => {
+if (USE_DB) {
   try {
-    await sequelize.authenticate();
-    console.log('✅ Database connection established successfully.');
-    isDatabaseConnected = true;
-    useMockData = false;
-  } catch (error) {
-    console.warn('⚠️  Unable to connect to the database, using mock data instead.');
-    console.log('🔧 Mock data mode activated - no database required.');
-    isDatabaseConnected = false;
+    // Importa Sequelize apenas quando DB estiver habilitado para evitar require de mysql2 na Vercel
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { Sequelize } = require('sequelize');
+
+    const dialect = (process.env.DB_DIALECT as any) || 'mysql';
+    sequelize = new Sequelize(
+      process.env.DB_NAME || 'default_db_name',
+      process.env.DB_USER || 'default_user',
+      process.env.DB_PASSWORD || 'default_password',
+      {
+        host: process.env.DB_HOST || 'localhost',
+        dialect,
+        port: Number(process.env.DB_PORT) || 3306,
+        logging: false,
+      }
+    );
+
+    (async () => {
+      try {
+        await sequelize.authenticate();
+        console.log('✅ Database connection established successfully.');
+        isDatabaseConnected = true;
+        useMockData = false;
+      } catch (err) {
+        console.warn('⚠️  Unable to connect to the database, using mock data instead.');
+        useMockData = true;
+        isDatabaseConnected = false;
+      }
+    })();
+  } catch (err) {
+    // Qualquer erro ao tentar carregar Sequelize/dialeto cai para mock
+    console.warn('⚠️  DB disabled (falling back to mock). Reason:', (err as Error).message);
+    sequelize = null;
     useMockData = true;
+    isDatabaseConnected = false;
   }
-};
+}
 
-testConnection();
-
-// Função para verificar se deve usar dados mock
 export const shouldUseMockData = () => useMockData;
-
-// Função para verificar se o banco está conectado
 export const isDatabaseAvailable = () => isDatabaseConnected;
-
 export default sequelize;
