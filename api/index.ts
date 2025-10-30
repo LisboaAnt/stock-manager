@@ -8,9 +8,8 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// ATENÇÃO: na Vercel a função fica montada em /api
-// portanto o router deve ficar em '/'
-app.use('/', router);
+// Na Vercel, a rota pública é /api/* → mantenha o prefixo '/api'
+app.use('/api', router);
 
 // Health check endpoint
 app.get('/health', (req: Request, res: Response) => {
@@ -21,7 +20,5 @@ app.get('/health', (req: Request, res: Response) => {
   });
 });
 
-// Exporta handler compatível com @vercel/node
-export default function handler(req: any, res: any) {
-  return (app as any)(req, res);
-}
+// Exporta o app Express diretamente; @vercel/node invoca como handler
+export default app;

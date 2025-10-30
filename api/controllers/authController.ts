@@ -54,33 +54,15 @@ export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     
-    if (shouldUseMockData()) {
-      // Usar dados mock
-      const user = await MockDataService.getUserByEmail(email);
-      if (!user) return res.status(404).json({ error: 'User not found' });
+    // Modo fictício: aceita email existente e senha '123456' e retorna token estático
+    const user = await MockDataService.getUserByEmail(email);
+    if (!user) return res.status(404).json({ error: 'User not found' });
 
-      // Verificar a senha
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
+    if (password !== '123456') return res.status(400).json({ error: 'Invalid credentials' });
 
-      // Gerar o token JWT
-      const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET || 'your_jwt_secret', { expiresIn: '1h' });
-
-      res.json({ token });
-    } else {
-      // Para Vercel, sempre usar dados mock por enquanto
-      const user = await MockDataService.getUserByEmail(email);
-      if (!user) return res.status(404).json({ error: 'User not found' });
-
-      // Verificar a senha
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
-
-      // Gerar o token JWT
-      const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET || 'your_jwt_secret', { expiresIn: '1h' });
-
-      res.json({ token });
-    }
+    // Token fictício (não assinado) para simplificar em ambiente serverless
+    const token = 'mock-token';
+    return res.json({ token });
   } catch (error) {
     res.status(500).json({ error: 'Error logging in' });
   }
