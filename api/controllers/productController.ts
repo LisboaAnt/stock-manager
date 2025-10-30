@@ -7,7 +7,7 @@ export const createProduct = async (req: Request, res: Response) => {
     const { name, description, price, imageUrl } = req.body;
 
     // Converta o preço para número e valide
-    const numericPrice = parseFloat(price);
+    const numericPrice = parseFloat(price as any);
     if (isNaN(numericPrice) || numericPrice < 0) {
       return res.status(400).json({ error: 'Invalid price' });
     }
@@ -78,7 +78,7 @@ export const updateProduct = async (req: Request, res: Response) => {
       const product = await MockDataService.updateProduct(Number(id), {
         name,
         description,
-        price: parseFloat(price),
+        price: parseFloat(price as any),
         imageUrl,
       });
       
