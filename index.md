@@ -780,5 +780,8 @@ O projeto consolidou meus conhecimentos em tecnologias modernas como Next.js, Re
 **Ações:**
 - [ ] Ambos: Iniciar Sprint 2 - Correção de problemas críticos
 
+###Figma
 
+![Figma1](figma1.png)
+![Figma2](figma2.png)
 
