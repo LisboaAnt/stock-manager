@@ -1,7 +1,9 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { apiFetch } from '@/lib/api';
 
 type LoginResponse = {
@@ -47,10 +49,45 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
-      <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-8 border border-zinc-200">
-        <h1 className="text-2xl font-semibold mb-6 text-zinc-900">Stock Manager - Login</h1>
-        <form className="flex flex-col gap-4" onSubmit={onSubmit}>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#f2f7fa' }}>
+      <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-8 items-center">
+        {/* Imagem à esquerda */}
+        <div className="hidden lg:flex items-center justify-center">
+          <div className="relative w-full max-w-lg">
+            <Image
+              src="/stock-image.png"
+              alt="Stock Manager - Gestão de Estoque"
+              width={600}
+              height={600}
+              className="object-contain"
+              priority
+            />
+          </div>
+        </div>
+
+        {/* Formulário à direita */}
+        <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8 border border-zinc-200 mx-auto lg:mx-0">
+          <div className="mb-6">
+            <div className="flex items-center justify-between">
+              <h1 className="text-3xl font-bold mb-2 text-zinc-900">Stock Manager</h1>
+              <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900 mb-4 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Voltar para Home
+            </Link>
+          </div>
+            <p className="text-sm text-zinc-600 mb-4">
+              Sistema de Gestão de Estoque
+            </p>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+              <p className="text-xs text-blue-900">
+                <strong className="font-semibold">Esta é uma demonstração.</strong>  Navegue pelo sistema e explore as funcionalidades básicas que oferecemos.
+              </p>
+            </div>
+          </div>
+          <form className="flex flex-col gap-4" onSubmit={onSubmit}>
           <label className="flex flex-col gap-1 text-sm text-zinc-700">
             Email
             <input
@@ -111,6 +148,7 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

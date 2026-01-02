@@ -2,15 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Package, Shield, Zap, Database, Server, CheckCircle2, ArrowRight, Mail, Globe, ExternalLink, Heart, X } from "lucide-react";
 
 export default function Home() {
   const [showDonation, setShowDonation] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-zinc-50">
+    <>
+      {/* Conteúdo */}
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-zinc-50 relative overflow-x-hidden">
       {/* Navbar */}
-      <nav className="bg-white/80 backdrop-blur-sm border-b border-zinc-200 sticky top-0 z-50">
+      <nav className="bg-white/80 backdrop-blur-sm border-b border-zinc-200 sticky top-0 z-[60]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
@@ -20,7 +23,7 @@ export default function Home() {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setShowDonation(true)}
-                className="px-4 py-2 text-sm font-medium text-zinc-700 hover:text-zinc-900 transition-colors flex items-center gap-2"
+                className="px-4 py-2 text-sm font-medium text-zinc-700 hover:text-zinc-900 transition-colors flex items-center gap-2 cursor-pointer"
               >
                 <Heart className="w-4 h-4 text-red-500" />
                 Apoie o Projeto
@@ -29,7 +32,7 @@ export default function Home() {
                 href="/login"
                 className="px-4 py-2 text-sm font-medium text-zinc-700 hover:text-zinc-900 transition-colors"
               >
-                Login
+                Acessar Versão de Teste
               </Link>
               <Link
                 href="#contato"
@@ -90,7 +93,7 @@ export default function Home() {
       )}
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12">
         <div className="text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-medium mb-6">
             <CheckCircle2 className="w-4 h-4" />
@@ -222,7 +225,7 @@ export default function Home() {
           <h2 className="text-4xl font-bold mb-4">
             Pronto para começar?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p className="text-xl text-blue-100 mb-4">
             Oferecemos hospedagem do front e back-end, enquanto o banco de dados fica na sua loja. 
             Valor totalmente acessível e seus dados sigilosos permanecem sob seu controle.
           </p>
@@ -231,7 +234,7 @@ export default function Home() {
             href="/login"
               className="px-8 py-4 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
           >
-              Acessar Sistema
+              Acessar Versão de Teste
               <ArrowRight className="w-5 h-5" />
           </Link>
           <Link
@@ -375,6 +378,35 @@ export default function Home() {
           </div>
       </div>
       </footer>
-    </div>
+      </div>
+      
+      {/* Empilhadeira Animada - No topo do documento, não rola com a página */}
+      <div 
+        className="animate-slide-horizontal"
+        style={{ 
+          position: 'absolute',
+          top: 'calc(92%)',
+          width: '120px',
+          height: '120px',
+          pointerEvents: 'none',
+          zIndex: 50,
+          willChange: 'left, transform'
+        }}
+      >
+        <img
+          src="/empilhadeira.webp"
+          alt="Empilhadeira"
+          style={{ 
+            width: '120px', 
+            height: '120px', 
+            objectFit: 'contain',
+            display: 'block',
+            opacity: 0.6,
+            transform: 'none',
+            flexShrink: 0
+          }}
+        />
+      </div>
+    </>
   );
 }
