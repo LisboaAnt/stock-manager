@@ -36,16 +36,55 @@ npm run server
 
 ## 📝 Variáveis de Ambiente
 
-O projeto usa dados mock por padrão. Para controlar isso, você pode definir:
+Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 
-- `MOCK_DATA=true` - Usa dados mock (padrão)
-- `MOCK_DATA=false` - Usa banco de dados real (quando implementado)
+```env
+MOCK_DATA=false
+DATABASE_URL="postgresql://usuario:senha@host:porta/database?sslmode=require&channel_binding=require"
+PORT=4000
+```
 
-As variáveis são configuradas automaticamente nos scripts do `package.json`.
+### Configuração do Banco de Dados
+
+O projeto suporta dois modos de operação:
+
+- **`MOCK_DATA=true`** - Usa dados mock em memória (para desenvolvimento)
+- **`MOCK_DATA=false`** - Usa banco de dados PostgreSQL real
+
+### Configuração do PostgreSQL (Banco Real)
+
+1. **Crie o arquivo `.env`** na raiz do projeto com sua string de conexão:
+   ```env
+   MOCK_DATA=false
+   DATABASE_URL="postgresql://usuario:senha@host:porta/database?sslmode=require&channel_binding=require"
+   PORT=4000
+   ```
+
+2. **Execute o script de inicialização do banco:**
+   ```bash
+   npm run setup-db
+   ```
+   
+   Este script irá:
+   - Criar os tipos ENUM necessários
+   - Criar todas as tabelas
+   - Adicionar o campo `password_hash` na tabela `users`
+   - Criar 3 usuários iniciais com perfis diferentes
+
+3. **Pronto!** O banco está configurado e pronto para uso.
 
 ## 🔐 Login
 
-Use as credenciais mock para testar:
+### Com Banco de Dados Real (MOCK_DATA=false)
+
+Use as credenciais criadas pelo script de setup:
+- **Admin:** `admin@stock.local` / `admin123`
+- **Gerente:** `gerente@stock.local` / `gerente123`
+- **Operador:** `operador@stock.local` / `operador123`
+
+### Com Dados Mock (MOCK_DATA=true)
+
+Use as credenciais mock:
 - **Email:** `admin@stock.local`
 - **Senha:** `admin123`
 

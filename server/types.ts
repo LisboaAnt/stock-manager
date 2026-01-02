@@ -47,6 +47,7 @@ export interface StockMovement {
   unitPrice: number;
   notes?: string;
   createdAt: string;
+  userName?: string; // Nome do usuário (opcional, vem do JOIN)
 }
 
 export interface AuthRequest {
@@ -58,4 +59,5 @@ export interface LoginResponse {
   token: string;
   user: User;
 }
+
 

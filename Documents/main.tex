@@ -1,0 +1,1205 @@
+\documentclass{article}
+
+% Language setting
+\usepackage[portuguese]{babel}
+
+% Set page size and margins
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{verbatim}
+
+\title{Documento de Especificação de Requisitos\\Sistema de Gerenciamento de Estoque - Stock Manager}
+\author{Antônio Lisboa\\Disciplina: Manutenção de Software\\Período: 2 meses\\\textit{Nota: Luan Ravel desistiu da disciplina durante o desenvolvimento do projeto.}}
+
+\begin{document}
+\maketitle
+
+\section{Introdução do Projeto}
+
+Este projeto consiste na manutenção e refatoração do Stock Manager, um sistema web de gerenciamento de estoque que atualmente apresenta falhas críticas que impedem seu funcionamento adequado. O sistema foi desenvolvido utilizando tecnologias modernas como Next.js, React, Express.js e TypeScript, porém encontra-se em estado não funcional, com problemas principalmente no sistema de autenticação e login.
+
+O problema que será resolvido é de natureza crítica, pois sistemas de gerenciamento de estoque são essenciais para o controle eficiente de produtos, movimentações e tomada de decisões estratégicas em empresas. A manutenção de software é uma prática fundamental na indústria de desenvolvimento, sendo responsável por garantir a continuidade, qualidade e evolução de sistemas existentes. Trabalhar com sistemas legados e corrigir problemas críticos é uma necessidade recorrente no ambiente profissional de desenvolvimento de software.
+
+O sistema desenvolvido será uma aplicação web full-stack para gerenciamento completo de estoque, caracterizada por sua arquitetura moderna, interface responsiva baseada em protótipo do Figma, autenticação segura via JWT, controle de acesso por perfis de usuário, gerenciamento de produtos com CRUD completo, controle de movimentações de estoque (entradas, saídas e ajustes), consultas de saldos e histórico, geração de relatórios e exportação de dados.
+
+Os benefícios esperados incluem a transformação de um sistema não funcional em uma aplicação robusta e operacional, código organizado e manutenível seguindo boas práticas, documentação completa que facilita futuras manutenções, experiência de usuário melhorada conforme design moderno, segurança adequada na autenticação e autorização, e base sólida para futuras evoluções e integrações com outros sistemas.
+
+\subsection{Tema}
+
+\textbf{Manutenção de Software e Refatoração de Sistema de Gerenciamento de Estoque}
+
+O tema do projeto aborda a manutenção corretiva e evolutiva de software, focando na identificação, correção e melhoria de um sistema existente. Especificamente, trata-se da refatoração completa de um sistema de gerenciamento de estoque, transformando-o de um estado não funcional para uma aplicação robusta e bem documentada.
+
+\subsection{Objetivo do Projeto}
+
+\subsubsection{Objetivo Geral}
+
+Transformar um sistema de gerenciamento de estoque que apresenta falhas críticas em uma aplicação funcional, robusta e bem documentada, seguindo as melhores práticas de desenvolvimento de software e metodologias ágeis.
+
+\subsubsection{Objetivos Específicos}
+
+\begin{enumerate}
+\item Corrigir problemas críticos do sistema, especialmente o sistema de autenticação e login que atualmente não funciona, eliminando bugs e erros que impedem o funcionamento adequado.
+
+\item Elaborar documentação completa do sistema, incluindo especificação de requisitos funcionais e não funcionais, diagramas de casos de uso e classes da UML, e matriz de rastreabilidade.
+
+\item Implementar interface de usuário baseada no protótipo criado no Figma, garantindo usabilidade, responsividade e alinhamento com o design moderno proposto.
+
+\item Aplicar metodologia Scrum + Kanban para gerenciamento do projeto, organizando sprints e entregas incrementais, mantendo documentação de atividades e progresso.
+
+\item Garantir qualidade e boas práticas, implementando tratamento adequado de erros, segurança na autenticação e autorização, e seguindo padrões de código limpo e manutenível.
+\end{enumerate}
+
+\subsection{Delimitação do Problema}
+
+O projeto está delimitado à manutenção e refatoração do sistema Stock Manager existente, focando especificamente na correção de problemas críticos, implementação de funcionalidades essenciais de gerenciamento de estoque, e elaboração de documentação completa conforme requisitos da disciplina.
+
+A amplitude do projeto compreende: análise detalhada do código existente e identificação de problemas, correção do sistema de autenticação e login, reorganização e refatoração do código, implementação de CRUD completo de produtos, implementação de controle de movimentações de estoque (entradas, saídas e ajustes), criação de interface baseada no protótipo do Figma, geração de documentação técnica completa (requisitos, diagramas UML, matriz de rastreabilidade), e aplicação de metodologias ágeis (Scrum + Kanban) para organização do trabalho.
+
+Ficam excluídos do escopo atual: integrações com sistemas externos (ERP, contábil), funcionalidades avançadas de relatórios (curva ABC, análises estatísticas complexas), implementação de testes automatizados extensivos, e otimizações avançadas de performance e escalabilidade.
+
+\subsection{Justificativa da Escolha do Tema}
+
+A escolha do tema de manutenção de software justifica-se academicamente pelos seguintes motivos:
+
+\textbf{Motivos Teóricos:} A manutenção de software representa uma fase crítica do ciclo de vida de desenvolvimento, compreendendo aproximadamente 60\% a 80\% do esforço total em projetos de software. Estudar e praticar manutenção permite compreender conceitos fundamentais como refatoração de código, análise de sistemas legados, identificação e correção de bugs, e melhoria contínua de qualidade. Além disso, o trabalho envolve aplicação prática de conhecimentos em engenharia de software, modelagem UML, especificação de requisitos, e metodologias ágeis.
+
+\textbf{Motivos Práticos:} Na prática profissional, desenvolvedores frequentemente trabalham com sistemas existentes que necessitam de manutenção, correção de bugs e evolução. Este projeto proporciona experiência real com desafios comuns no ambiente profissional, como compreensão de código legado, identificação de problemas em sistemas não documentados, e aplicação de técnicas de refatoração. O trabalho também desenvolve habilidades em trabalho em equipe, comunicação técnica, e organização de projetos utilizando metodologias ágeis.
+
+\textbf{Relevância do Problema:} Sistemas de gerenciamento de estoque são amplamente utilizados em empresas de diversos segmentos, sendo essenciais para operações eficientes. A manutenção e correção de tais sistemas têm impacto direto na produtividade e no controle operacional das organizações, tornando o projeto relevante tanto do ponto de vista acadêmico quanto prático.
+
+\subsection{Organização do Trabalho}
+
+Este documento está organizado da seguinte forma:
+
+\textbf{Capítulo 1 - Introdução do Projeto:} Apresenta o projeto, tema, objetivos, delimitação do problema e justificativa.
+
+\textbf{Capítulo 2 - Descrição Geral do Sistema:} Descreve o sistema, o problema a ser resolvido, principais envolvidos e regras de negócio.
+
+\textbf{Capítulo 3 - Elicitação de Requisitos:} Apresenta as técnicas escolhidas para elicitação, sua aplicação e os resultados obtidos, incluindo listagem de requisitos funcionais e não funcionais.
+
+\textbf{Capítulo 4 - Documentação de Casos de Uso:} Descreve os atores do sistema e apresenta o diagrama de casos de uso.
+
+\textbf{Capítulo 5 - Diagrama de Classes:} Apresenta o diagrama de classes do sistema.
+
+\textbf{Capítulo 6 - Matriz de Rastreabilidade:} Elabora a matriz de rastreabilidade entre requisitos e modelagem.
+
+\textbf{Capítulo 7 - Planejamento do Scrum com Trello:} Detalha o planejamento do desenvolvimento utilizando Scrum e Kanban.
+
+\textbf{Capítulo 8 - Conclusões:} Apresenta as conclusões gerais e a percepção individual do desenvolvimento do projeto.
+
+\textbf{Capítulo 9 - Ata de Reunião:} Documenta as reuniões e atividades realizadas durante o desenvolvimento do projeto.
+
+\textbf{Capítulo 10 - Etapa 3 - Ciclo de Manutenção:} Documenta o processo de manutenção do software com base nas solicitações recebidas de outras equipes, incluindo análise de impacto, planejamento e implementação de melhorias. (Documento separado: \texttt{etapa3\_manutencao.tex})
+
+\section{Descrição Geral do Sistema}
+
+\subsection{Descrição do Problema}
+
+O sistema Stock Manager foi desenvolvido como uma aplicação web full-stack para gerenciamento de estoque, porém apresenta diversas falhas críticas que impedem seu uso adequado. O principal problema identificado é a não funcionalidade do sistema de autenticação e login, que é essencial para o acesso às funcionalidades do sistema. Além disso, o código apresenta problemas de organização, duplicação de arquivos, inconsistências na configuração do banco de dados, e falta de documentação adequada.
+
+\textbf{Quem é afetado pelo sistema?}
+
+O sistema afeta diretamente empresas que necessitam de controle de estoque, incluindo pequenas e médias empresas de varejo, distribuidoras, e empresas de manufatura. Os usuários impactados são administradores do sistema, operadores de estoque responsáveis pelo cadastro e movimentação de produtos, e profissionais da área financeira que necessitam de relatórios e análises de estoque para tomada de decisões.
+
+\textbf{Qual é o impacto do sistema?}
+
+O impacto do sistema não funcional é significativo, pois impede o controle adequado de estoque, gerando problemas operacionais como falta de rastreabilidade de produtos, dificuldade em realizar inventários, impossibilidade de gerar relatórios precisos, e risco de perdas por falta de controle. Por outro lado, quando corrigido e funcional, o sistema proporcionará controle eficiente de estoque, rastreabilidade completa de movimentações, geração de relatórios precisos, e base para tomada de decisões estratégicas.
+
+\textbf{Qual seria uma boa solução para o problema?}
+
+A solução proposta envolve manutenção sistemática do sistema, incluindo: correção do sistema de autenticação implementando JWT de forma adequada, refatoração do código eliminando duplicações e organizando a estrutura, configuração adequada do banco de dados MySQL, implementação completa das funcionalidades de CRUD de produtos, desenvolvimento do módulo de controle de movimentações de estoque, criação de interface moderna e responsiva baseada no protótipo do Figma, e documentação completa do sistema. A solução seguirá metodologias ágeis para garantir entregas incrementais e organizadas.
+
+\subsection{Principais Envolvidos e suas Características}
+
+\subsubsection{Usuários do Sistema}
+
+O sistema destina-se a empresas de diversos segmentos que necessitam de controle de estoque, incluindo empresas de varejo, distribuidoras, empresas de manufatura, e empresas de serviços que trabalham com materiais e produtos. O sistema é adequado tanto para pequenas empresas que precisam de controle básico quanto para empresas médias que necessitam de funcionalidades mais avançadas.
+
+Sistemas de estoque exigem \textbf{rastreabilidade} (saber quem fez o quê) e \textbf{integridade} (o número físico deve bater com o virtual). Para um sistema profissional, recomenda-se dividir em 3 níveis hierárquicos de acesso (RBAC - Role-Based Access Control), evitando que operadores realizem ações críticas acidentalmente.
+
+\textbf{Tipos de Usuários:}
+
+\begin{enumerate}
+\item \textbf{Administrador (Super User)}
+   \begin{itemize}
+   \item Tem acesso total ao sistema, configurações globais e gestão de usuários
+   \item Responsável pela configuração e manutenção do sistema
+   \item Gerencia usuários, permissões e perfis de acesso
+   \item Configura parâmetros do sistema
+   \item Características: conhecimento técnico em sistemas, responsável pela segurança e configuração
+   \end{itemize}
+
+\item \textbf{Gerente de Estoque (Nível Tático)}
+   \begin{itemize}
+   \item Focado em análise, cadastro de produtos, fornecedores e auditoria
+   \item Pode autorizar ajustes manuais (furos de estoque)
+   \item Responsável pelo cadastro e manutenção de produtos e categorias
+   \item Cadastra e gerencia fornecedores
+   \item Visualiza relatórios financeiros e histórico completo de movimentações
+   \item Realiza ajustes de inventário quando necessário
+   \item Características: conhecimento estratégico do negócio, responsável por análises e tomada de decisões
+   \end{itemize}
+
+\item \textbf{Operador Logístico/Estoquista (Nível Operacional)}
+   \begin{itemize}
+   \item Focado no dia a dia operacional
+   \item Registra entradas e saídas físicas de mercadoria
+   \item Visualiza produtos e categorias (apenas leitura)
+   \item Consulta seu próprio histórico de movimentações
+   \item Interface deve ser simples e rápida para operações frequentes
+   \item Características: conhecimento operacional do negócio, uso frequente do sistema, necessidade de interface intuitiva e ágil
+   \end{itemize}
+\end{enumerate}
+
+\subsubsection{Matriz de Permissões}
+
+A matriz de permissões define o controle de acesso baseado em perfis (RBAC), garantindo que cada tipo de usuário tenha acesso apenas às funcionalidades apropriadas ao seu nível hierárquico.
+
+\begin{longtable}{|p{4cm}|c|c|c|}
+\hline
+\textbf{Funcionalidade} & \textbf{Administrador} & \textbf{Gerente} & \textbf{Operador} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Funcionalidade} & \textbf{Administrador} & \textbf{Gerente} & \textbf{Operador} \\
+\hline
+\endhead
+Gerenciar Usuários & $\checkmark$ & $\times$ & $\times$ \\
+\hline
+Cadastrar Produtos/Categorias & $\checkmark$ & $\checkmark$ & $\circ$ (Visualizar) \\
+\hline
+Cadastrar Fornecedores & $\checkmark$ & $\checkmark$ & $\times$ \\
+\hline
+Registrar Entrada (Compra) & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\hline
+Registrar Saída (Venda/Uso) & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\hline
+Ajuste de Inventário (Perdas) & $\checkmark$ & $\checkmark$ & $\times$ (Requer aprovação) \\
+\hline
+Relatórios Financeiros & $\checkmark$ & $\checkmark$ & $\times$ \\
+\hline
+Histórico de Movimentação (Logs) & $\checkmark$ & $\checkmark$ & $\circ$ (Apenas o seu) \\
+\hline
+\end{longtable}
+
+\subsection{Regras de Negócio}
+
+\textbf{Restrições de Negócio:}
+
+\begin{enumerate}
+\item Todos os usuários devem estar autenticados para acessar o sistema (autenticação via Google Auth)
+\item Apenas administradores podem gerenciar usuários e permissões
+\item Produtos devem possuir: Nome, SKU (código único), Código de Barras (EAN), Categoria, Preço de Custo, Preço de Venda e Estoque Mínimo (obrigatórios)
+\item Não permitir deletar produtos que tenham histórico de movimentação (apenas inativar/arquivar)
+\item Movimentações de estoque devem ser registradas com data, quantidade, tipo (entrada, saída ou ajuste) e motivo (para saídas: Venda, Transferência, Uso Interno)
+\item Saldo de estoque não pode ser negativo (o sistema deve bloquear saída se a quantidade solicitada for maior que a disponível)
+\item Ajustes de inventário só podem ser realizados por Gerentes ou Administradores
+\item Cada movimentação deve estar associada a um usuário responsável
+\item Produtos devem ser categorizados para melhor organização
+\item Histórico de movimentações deve ser mantido para auditoria e rastreabilidade
+\item O sistema deve calcular o Custo Médio automaticamente nas entradas
+\item O sistema deve gerar alertas quando o estoque estiver abaixo do mínimo definido
+\item Upload de imagens de produtos deve ser realizado via Cloudinary
+\end{enumerate}
+
+\textbf{Restrições de Desempenho:}
+
+\begin{enumerate}
+\item Páginas principais devem carregar em menos de 2 segundos (p95)
+\item Sistema deve suportar até 10.000 produtos cadastrados
+\item Consultas de histórico devem ser otimizadas com paginação
+\item Interface deve responder a ações do usuário em menos de 500ms
+\end{enumerate}
+
+\textbf{Tolerância à Falhas:}
+
+\begin{enumerate}
+\item Sistema deve manter disponibilidade de 99\% mensal
+\item Erros de autenticação devem ser tratados adequadamente sem expor informações sensíveis
+\item Falhas de comunicação com banco de dados devem ser tratadas com mensagens apropriadas
+\item Dados críticos devem ser validados antes de persistência
+\end{enumerate}
+
+\textbf{Volume de Informação:}
+
+\begin{enumerate}
+\item Estimativa inicial: até 1.000 produtos cadastrados
+\item Estimativa de crescimento: 10\% ao mês
+\item Movimentações de estoque: estimativa de 500 registros por mês
+\item Histórico de movimentações: mantido por 24 meses
+\end{enumerate}
+
+\textbf{Ferramentas de Apoio:}
+
+\begin{enumerate}
+\item Sistema de versionamento Git para controle de código
+\item GitHub Projects ou Trello para gerenciamento de tarefas
+\item Protótipo no Figma como referência de design
+\item MySQL como banco de dados principal
+\item Postman ou similar para testes de API
+\item Google Auth para autenticação de usuários
+\item Cloudinary para armazenamento de imagens de produtos
+\end{enumerate}
+
+\subsection{Fluxo de Uso Sugerido}
+
+O fluxo de uso do sistema segue uma sequência lógica que garante a integridade dos dados e a rastreabilidade das operações:
+
+\begin{enumerate}
+\item \textbf{Admin} configura o sistema e cria a conta do Gerente através do gerenciamento de usuários.
+\item \textbf{Gerente} cadastra as Categorias e os Produtos iniciais, definindo SKU, código de barras, preços e estoque mínimo.
+\item \textbf{Operador} recebe a mercadoria física e lança a \textbf{Entrada} no sistema, selecionando o fornecedor e informando as quantidades.
+\item \textbf{Sistema} atualiza o saldo automaticamente e calcula o Custo Médio dos produtos.
+\item \textbf{Operador} realiza a separação de pedidos e lança a \textbf{Saída}, informando o motivo (Venda, Transferência ou Uso Interno).
+\item \textbf{Sistema} verifica se atingiu o nível de alerta (estoque abaixo do mínimo) e notifica o Gerente para recomprar.
+\item \textbf{Gerente} visualiza o Dashboard com alertas e relatórios financeiros para tomada de decisões.
+\end{enumerate}
+
+\section{Elicitação de Requisitos}
+
+\subsection{Técnicas Escolhidas}
+
+\subsubsection{Ciclo de Vida}
+
+O projeto será desenvolvido seguindo um ciclo de vida iterativo e incremental, combinando elementos do modelo em espiral com metodologia ágil Scrum. O ciclo será dividido em fases de análise, design, implementação e testes, executadas de forma iterativa ao longo de sprints de 2 semanas.
+
+\textbf{Fases do Ciclo de Vida:}
+
+\begin{enumerate}
+\item \textbf{Fase de Análise e Planejamento (Sprint 1):} Análise do código existente, identificação de problemas, elicitação de requisitos, criação de diagramas UML
+
+\item \textbf{Fase de Correção e Refatoração (Sprint 2):} Correção de problemas críticos, refatoração de código, configuração de ambiente
+
+\item \textbf{Fase de Implementação (Sprint 3):} Implementação de funcionalidades principais, desenvolvimento de interface
+
+\item \textbf{Fase de Testes e Documentação (Sprint 4):} Testes finais, elaboração de documentação completa, preparação para entrega
+\end{enumerate}
+
+\subsubsection{Técnicas de Elicitação de Requisitos}
+
+\textbf{Técnica 1: Análise de Documentação Existente}
+
+A técnica de análise de documentação existente foi escolhida porque o projeto trata de manutenção de um sistema já desenvolvido. Esta técnica permite identificar requisitos através da análise do código fonte, documentação existente (mesmo que incompleta), comentários no código, e estrutura de arquivos. É adequada para compreender o que foi implementado anteriormente e quais requisitos estavam implícitos no desenvolvimento original.
+
+\textbf{Como funciona:} Consiste em examinar sistematicamente o código existente, identificando funcionalidades implementadas, problemas encontrados, e requisitos que podem ser inferidos pela estrutura do sistema. A análise inclui leitura de código, identificação de padrões, e mapeamento de funcionalidades.
+
+\textbf{Técnica 2: Brainstorming}
+
+A técnica de brainstorming foi escolhida para complementar a análise de documentação, permitindo que a equipe identifique requisitos adicionais não presentes no código original, melhorias necessárias, e funcionalidades que devem ser implementadas. É útil para explorar soluções criativas e identificar requisitos não óbvios.
+
+\textbf{Como funciona:} Consiste em sessões de geração de ideias onde são identificadas funcionalidades, melhorias e requisitos do sistema. As ideias são registradas sem crítica inicial, e posteriormente organizadas e priorizadas.
+
+\subsection{Aplicação das Técnicas}
+
+\subsubsection{Aplicação da Análise de Documentação Existente}
+
+A análise de documentação foi realizada através da seguinte metodologia:
+
+\begin{enumerate}
+\item \textbf{Análise do Código Fonte:}
+   \begin{itemize}
+   \item Leitura sistemática dos arquivos do frontend (Next.js/React)
+   \item Análise dos controllers e rotas do backend (Express.js)
+   \item Identificação de modelos de dados (Sequelize)
+   \item Mapeamento de funcionalidades implementadas
+   \end{itemize}
+
+\item \textbf{Análise de Estrutura:}
+   \begin{itemize}
+   \item Identificação de pastas duplicadas (\texttt{api/} e \texttt{backend/})
+   \item Análise de configurações de banco de dados
+   \item Verificação de variáveis de ambiente
+   \item Identificação de problemas de autenticação
+   \end{itemize}
+
+\item \textbf{Identificação de Requisitos:}
+   \begin{itemize}
+   \item Mapeamento de funcionalidades existentes (mesmo que não funcionais)
+   \item Identificação de funcionalidades planejadas (comentários, estrutura)
+   \item Análise do protótipo do Figma para requisitos de interface
+   \end{itemize}
+\end{enumerate}
+
+\textbf{Artefatos Gerados:}
+\begin{itemize}
+\item Lista de funcionalidades identificadas no código
+\item Mapeamento de problemas encontrados
+\item Estrutura de dados identificada
+\item Requisitos inferidos do código
+\end{itemize}
+
+\subsubsection{Aplicação do Brainstorming}
+
+As sessões de brainstorming foram realizadas da seguinte forma:
+
+\begin{enumerate}
+\item \textbf{Sessão 1 - Identificação de Funcionalidades:}
+   \begin{itemize}
+   \item Geração de ideias sobre funcionalidades essenciais
+   \item Identificação de funcionalidades adicionais desejáveis
+   \item Discussão sobre melhorias de usabilidade
+   \end{itemize}
+
+\item \textbf{Sessão 2 - Priorização:}
+   \begin{itemize}
+   \item Organização das ideias geradas
+   \item Classificação por prioridade (essencial, importante, desejável)
+   \item Definição de escopo do projeto
+   \end{itemize}
+\end{enumerate}
+
+\textbf{Artefatos Gerados:}
+\begin{itemize}
+\item Lista de ideias de funcionalidades
+\item Matriz de priorização
+\item Requisitos adicionais identificados
+\end{itemize}
+
+\textbf{Processo de Elicitação de Requisitos:}
+
+O processo de elicitação de requisitos foi executado seguindo uma sequência lógica e estruturada, iniciando pela análise do código existente e culminando na documentação completa dos requisitos identificados.
+
+O processo iniciou com a \textbf{Análise de Documentação Existente}, onde foi realizada a leitura sistemática do código fonte, análise da estrutura de pastas e identificação das funcionalidades já implementadas (mesmo que não funcionais). Esta etapa permitiu compreender o estado atual do sistema e identificar requisitos implícitos no código.
+
+Em seguida, foi aplicada a técnica de \textbf{Brainstorming}, onde foram geradas ideias livremente sobre funcionalidades essenciais, melhorias necessárias e requisitos adicionais não presentes no código original. Esta etapa foi fundamental para identificar melhorias e funcionalidades que devem ser implementadas.
+
+Posteriormente, foi realizada a \textbf{Organização e Priorização} dos requisitos identificados, classificando-os por prioridade (Essencial, Importante, Desejável) e definindo o escopo do projeto. Esta etapa garantiu que os requisitos críticos fossem priorizados.
+
+Por fim, foi realizada a \textbf{Documentação de Requisitos}, onde todos os requisitos foram listados e organizados em requisitos funcionais (RF) e requisitos não funcionais (RNF), resultando em um documento completo e estruturado que serve como base para o desenvolvimento do sistema.
+
+\subsection{Resultados Obtidos}
+
+A análise dos resultados foi realizada através da consolidação das informações obtidas nas duas técnicas aplicadas. Os requisitos identificados na análise de documentação foram complementados com as ideias geradas no brainstorming, resultando em um conjunto inicial de requisitos organizados por prioridade.
+
+Os requisitos foram classificados em três níveis de prioridade: \textbf{Essencial} (crítico para o funcionamento básico do sistema), \textbf{Importante} (necessário para um sistema completo e funcional), e \textbf{Desejável} (melhora a experiência e funcionalidades, mas não é crítico).
+
+\subsubsection{Tabela 1. Requisitos Funcionais do Sistema}
+
+\begin{longtable}{|p{1cm}|p{8cm}|p{3cm}|}
+\hline
+\textbf{Código} & \textbf{Descrição} & \textbf{Prioridade} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Código} & \textbf{Descrição} & \textbf{Prioridade} \\
+\hline
+\endhead
+RF01 & O sistema deve permitir autenticação de usuários através de Google Auth & Essencial \\
+\hline
+RF02 & O sistema deve gerar e validar tokens JWT para controle de sessão & Essencial \\
+\hline
+RF03 & O sistema deve permitir logout e encerramento de sessão & Essencial \\
+\hline
+RF04 & O sistema deve permitir cadastro e gerenciamento de novos usuários (apenas Administrador) & Essencial \\
+\hline
+RF05 & O sistema deve permitir criar, listar, buscar, editar e inativar produtos com: Nome, SKU (código único), Código de Barras (EAN), Categoria, Preço de Custo, Preço de Venda e Estoque Mínimo & Essencial \\
+\hline
+RF06 & O sistema deve permitir classificar produtos por categorias & Importante \\
+\hline
+RF07 & O sistema deve permitir registrar entradas de estoque selecionando fornecedor e informando quantidade (Operador, Gerente ou Administrador) & Essencial \\
+\hline
+RF08 & O sistema deve permitir registrar saídas de estoque selecionando motivo (Venda, Transferência, Uso Interno) e produtos (Operador, Gerente ou Administrador) & Essencial \\
+\hline
+RF09 & O sistema deve permitir realizar ajustes de inventário para correção de saldos (apenas Gerente ou Administrador) & Importante \\
+\hline
+RF10 & O sistema deve permitir consultar saldo atual de cada produto & Essencial \\
+\hline
+RF11 & O sistema deve permitir consultar histórico de movimentações por produto & Importante \\
+\hline
+RF12 & O sistema deve permitir pesquisar e filtrar produtos por nome, categoria e estoque & Importante \\
+\hline
+RF13 & O sistema deve permitir gerar relatórios de estoque atual & Importante \\
+\hline
+RF14 & O sistema deve permitir gerar relatórios de movimentações por período & Importante \\
+\hline
+RF15 & O sistema deve permitir exportar relatórios em formato CSV ou JSON & Desejável \\
+\hline
+RF16 & O sistema deve permitir cadastro e gerenciamento de fornecedores (Administrador ou Gerente) & Importante \\
+\hline
+RF17 & O sistema deve permitir relacionar produtos a fornecedores & Importante \\
+\hline
+RF18 & O sistema deve permitir gerenciar usuários (criar, editar, ativar, desativar) - apenas Administrador & Importante \\
+\hline
+RF19 & O sistema deve implementar controle de acesso por perfis com 3 níveis hierárquicos (Administrador, Gerente, Operador) & Essencial \\
+\hline
+RF20 & O sistema deve registrar auditoria de operações (usuário, ação, data) & Importante \\
+\hline
+RF21 & O sistema deve permitir upload de imagens de produtos via Cloudinary & Importante \\
+\hline
+RF22 & O sistema deve calcular custo médio automaticamente nas entradas & Importante \\
+\hline
+RF23 & O sistema deve gerar alertas quando estoque estiver abaixo do mínimo & Importante \\
+\hline
+RF24 & O sistema deve exibir dashboard com produtos em estoque baixo, próximos da validade e valor total do estoque & Importante \\
+\hline
+RF25 & O sistema deve bloquear saída de produtos quando quantidade solicitada for maior que disponível & Essencial \\
+\hline
+RF26 & O sistema deve permitir apenas inativar produtos com histórico de movimentação (não deletar) & Importante \\
+\hline
+RF27 & O sistema deve permitir cadastrar produtos perecíveis com data de validade & Importante \\
+\hline
+RF28 & O sistema deve permitir consultar histórico de movimentações por usuário (Operador visualiza apenas o seu) & Importante \\
+\hline
+RF29 & O sistema deve notificar Gerente/Administrador quando estoque atingir nível mínimo & Importante \\
+\hline
+RF30 & O sistema deve permitir importação de entradas via XML da Nota Fiscal (feature futura) & Desejável \\
+\hline
+RF31 & O sistema deve garantir rastreabilidade de todas as operações (saber quem fez o quê) & Essencial \\
+\hline
+RF32 & O sistema deve garantir integridade dos dados (número físico deve bater com o virtual) & Essencial \\
+\hline
+RF33 & O sistema deve fornecer interface simples e rápida para Operador realizar operações frequentes & Importante \\
+\hline
+RF34 & O sistema deve permitir configurar sistema e parâmetros globais (apenas Administrador) & Importante \\
+\hline
+\end{longtable}
+
+\subsubsection{Tabela 2. Requisitos Não-Funcionais do Sistema}
+
+\begin{longtable}{|p{1cm}|p{6cm}|p{3cm}|p{3cm}|}
+\hline
+\textbf{Código} & \textbf{Descrição} & \textbf{Categoria} & \textbf{Prioridade} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Código} & \textbf{Descrição} & \textbf{Categoria} & \textbf{Prioridade} \\
+\hline
+\endhead
+RNF01 & O sistema deve utilizar comunicação HTTPS em produção & Segurança & Essencial \\
+\hline
+RNF02 & O sistema deve proteger endpoints com autenticação JWT & Segurança & Essencial \\
+\hline
+RNF03 & O sistema deve sanitizar todas as entradas do usuário para prevenir ataques & Segurança & Essencial \\
+\hline
+RNF04 & O sistema deve utilizar Google Auth para autenticação (não armazena senhas localmente) & Segurança & Essencial \\
+\hline
+RNF05 & O sistema deve implementar controle de acesso baseado em 3 níveis hierárquicos (RBAC) & Segurança & Essencial \\
+\hline
+RNF06 & O sistema deve ter disponibilidade de 99\% mensal & Confiabilidade & Importante \\
+\hline
+RNF07 & O sistema deve ter tempo de resposta de páginas principais inferior a 2 segundos (p95) & Desempenho & Importante \\
+\hline
+RNF08 & O sistema deve suportar até 10.000 produtos cadastrados & Desempenho & Importante \\
+\hline
+RNF09 & O sistema deve ter interface responsiva funcionando em dispositivos móveis, tablets e desktops & Usabilidade & Importante \\
+\hline
+RNF10 & O sistema deve seguir padrões de acessibilidade web (WCAG) & Usabilidade & Desejável \\
+\hline
+RNF11 & O sistema deve ter interface intuitiva e fácil de usar, seguindo o protótipo do Figma & Usabilidade & Importante \\
+\hline
+RNF12 & O sistema deve gerar logs de requisições e erros para observabilidade & Implementação & Importante \\
+\hline
+RNF13 & O sistema deve ser compatível com navegadores modernos (Chrome, Firefox, Safari, Edge) & Implementação & Essencial \\
+\hline
+RNF14 & O sistema deve utilizar API REST com formato JSON & Implementação & Essencial \\
+\hline
+RNF15 & O sistema deve ter interface em português brasileiro (pt-BR) & Implementação & Essencial \\
+\hline
+RNF16 & O sistema deve integrar com Google Auth para autenticação de usuários & Implementação & Essencial \\
+\hline
+RNF17 & O sistema deve integrar com Cloudinary para armazenamento de imagens & Implementação & Importante \\
+\hline
+RNF18 & O sistema deve garantir rastreabilidade completa de operações (logs de auditoria) & Segurança & Essencial \\
+\hline
+RNF19 & O sistema deve garantir integridade referencial dos dados (validações antes de persistência) & Confiabilidade & Essencial \\
+\hline
+RNF20 & O sistema deve ter interface otimizada para operações frequentes do Operador (simples e rápida) & Usabilidade & Importante \\
+\hline
+RNF21 & O sistema deve suportar leitura de código de barras (bipagem) para entrada de produtos & Usabilidade & Importante \\
+\hline
+RNF22 & O sistema deve calcular custo médio automaticamente nas movimentações de entrada & Implementação & Importante \\
+\hline
+\end{longtable}
+
+\section{Documentação de Casos de Uso}
+
+\subsection{Atores}
+
+\subsubsection{Tabela 3. Atores do Sistema}
+
+\begin{longtable}{|p{1cm}|p{4cm}|p{10cm}|}
+\hline
+\textbf{\#} & \textbf{Ator} & \textbf{Definição} \\
+\hline
+\endfirsthead
+\hline
+\textbf{\#} & \textbf{Ator} & \textbf{Definição} \\
+\hline
+\endhead
+1 & Administrador (Super User) & Usuário responsável pela configuração e manutenção do sistema. Tem acesso total ao sistema, configurações globais e gestão de usuários. Gerencia usuários, permissões, perfis de acesso e configurações gerais. Possui acesso total a todas as funcionalidades do sistema. \\
+\hline
+2 & Gerente de Estoque (Nível Tático) & Usuário focado em análise, cadastro de produtos, fornecedores e auditoria. Pode autorizar ajustes manuais (furos de estoque). Responsável pelo cadastro e manutenção de produtos e categorias, cadastro de fornecedores, visualização de relatórios financeiros e histórico completo de movimentações. \\
+\hline
+3 & Operador Logístico/Estoquista (Nível Operacional) & Usuário focado no dia a dia operacional. Registra entradas e saídas físicas de mercadoria. Visualiza produtos e categorias (apenas leitura) e consulta seu próprio histórico de movimentações. Interface deve ser simples e rápida para operações frequentes. \\
+\hline
+\end{longtable}
+
+\subsection{Casos de Uso Principais}
+
+Aqui detalhamos os principais casos de uso (CUs) essenciais para o MVP (Mínimo Produto Viável):
+
+\subsubsection{UC01 - Gestão de Produtos (O "Coração" do sistema)}
+
+\textbf{Quem:} Gerente ou Administrador.
+
+\textbf{Como:} O usuário cadastra o produto definindo: Nome, SKU (código único), Código de Barras (EAN), Categoria, Preço de Custo, Preço de Venda e, crucialmente, o \textbf{Estoque Mínimo} (para gerar alertas de reposição). O cadastro inclui upload de imagem do produto via Cloudinary.
+
+\textbf{Regra:} Não permitir deletar produtos que tenham histórico de movimentação (apenas inativar/arquivar).
+
+\textbf{Relacionamentos:}
+\begin{itemize}
+\item \textbf{Cadastrar Produto $<<$include$>>$ Fazer Upload de Imagem:} O upload sempre é incluído no cadastro
+\item Conecta com: Cloudinary (a função de upload envia a foto para lá e recebe o link)
+\end{itemize}
+
+\subsubsection{UC02 - Registrar Entrada (Inbound)}
+
+\textbf{Quem:} Operador, Gerente ou Administrador.
+
+\textbf{Como:} O usuário seleciona o fornecedor, bipa ou digita os produtos e informa a quantidade que chegou. O sistema soma ao saldo atual e calcula automaticamente o Custo Médio.
+
+\textbf{Diferencial:} Possibilidade futura de importar via XML da Nota Fiscal (feature avançada).
+
+\textbf{Relacionamentos:}
+\begin{itemize}
+\item Conecta com: Fornecedor (precisa selecionar de quem comprou)
+\item Conecta com: Produto (aumenta a quantidade no banco)
+\end{itemize}
+
+\subsubsection{UC03 - Registrar Saída (Outbound)}
+
+\textbf{Quem:} Operador, Gerente ou Administrador.
+
+\textbf{Como:} O usuário seleciona o motivo (Venda, Transferência, Uso Interno) e os produtos. O sistema subtrai do saldo.
+
+\textbf{Regra:} O sistema deve bloquear a saída se a quantidade solicitada for maior que a disponível (evitar estoque negativo).
+
+\textbf{Relacionamentos:}
+\begin{itemize}
+\item Conecta com: Produto (diminui a quantidade no banco)
+\item \textbf{Registrar Saída $<<$extend$>>$ Verificar Estoque:} Se o saldo for zero ou insuficiente, bloqueia a saída
+\end{itemize}
+
+\subsubsection{UC04 - Ajuste de Inventário (Auditoria)}
+
+\textbf{Quem:} Gerente ou Administrador.
+
+\textbf{Cenário:} O sistema diz que tem 10 itens, mas na prateleira só tem 9 (quebra, roubo ou erro).
+
+\textbf{Como:} O gerente faz um lançamento de "Ajuste de Perda". Isso acerta o saldo, mas cria um registro de \textit{prejuízo} nos relatórios, diferente de uma venda.
+
+\textbf{Relacionamentos:}
+\begin{itemize}
+\item Conecta com: Produto (para corrigir um saldo errado manualmente)
+\end{itemize}
+
+\subsubsection{UC05 - Dashboard e Alertas}
+
+\textbf{Quem:} Gerente ou Administrador.
+
+\textbf{Como:} Ao logar, o sistema mostra cards com:
+\begin{itemize}
+\item Produtos com estoque baixo (abaixo do mínimo definido no UC01)
+\item Produtos próximos da validade (se for perecível)
+\item Valor total do estoque parado (valuation)
+\end{itemize}
+
+\subsection{Diagrama de Caso de Uso}
+
+O diagrama de casos de uso apresenta as funcionalidades do sistema e suas relações com os atores. O sistema possui fronteira bem definida, separando o sistema de estoque dos atores externos (Administrador, Gerente de Estoque e Operador Logístico).
+
+O diagrama inclui relacionamentos de associação entre atores e casos de uso, relacionamentos de herança (todos os atores herdam funcionalidades de autenticação), relacionamentos de inclusão ($<<$include$>>$) onde um caso de uso sempre inclui outro, e relacionamentos de extensão ($<<$extend$>>$) onde um caso de uso pode estender outro opcionalmente.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{Caso de uso.png}
+\caption{Diagrama de Caso de Uso do Sistema}
+\label{fig:caso-uso}
+\end{figure}
+
+\textbf{Descrição dos relacionamentos principais:}
+
+\begin{itemize}
+\item \textbf{Administrador $->$ Gerenciar Usuários:} Conecta com Google Auth (para validar o e-mail e criar o login)
+\item \textbf{Administrador $->$ Configurar Sistema:} Conecta com Gerenciar Usuários (pois define quem é Gerente ou Operador)
+\item \textbf{Gerente $->$ Cadastrar Produto $<<$include$>>$ Fazer Upload de Imagem:} Conecta com Cloudinary
+\item \textbf{Gerente $->$ Realizar Ajuste de Inventário:} Conecta com Produto (para corrigir saldo manualmente)
+\item \textbf{Gerente $->$ Visualizar Relatórios Financeiros}
+\item \textbf{Operador $->$ Registrar Entrada de Mercadoria:} Conecta com Fornecedor e Produto
+\item \textbf{Operador $->$ Registrar Saída de Mercadoria $<<$extend$>>$ Verificar Estoque:} Se o saldo for zero, bloqueia a saída
+\item \textbf{Usuário (todos) $->$ Fazer Login:} Conecta com Google Auth (o sistema redireciona para o Google)
+\item \textbf{Usuário (todos) $->$ Consultar Estoque:} Conecta com Produto (apenas leitura)
+\end{itemize}
+
+\section{Diagrama Entidade-Relacionamento (DER)}
+
+O diagrama entidade-relacionamento apresenta a estrutura de dados do sistema, mostrando as entidades principais, seus atributos e os relacionamentos entre elas. Este modelo sustenta os casos de uso definidos, focando nas tabelas de Produtos, Movimentações e Usuários.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{DER.png}
+\caption{Diagrama Entidade-Relacionamento (DER) do Sistema}
+\label{fig:der}
+\end{figure}
+
+\section{Diagrama de Classes}
+
+O diagrama de classes apresenta a estrutura estática do sistema, mostrando as classes principais, seus atributos, métodos e relacionamentos. O sistema possui classes de domínio (User, Product, Category, Supplier, StockMovement), classes de serviço (AuthService, ProductService, StockService, ReportService), e enums (Role, MovementType).
+
+\textbf{Principais classes:}
+
+\begin{itemize}
+\item \textbf{User:} Representa usuários do sistema com autenticação via Google Auth e perfil (Administrador, Gerente, Operador)
+\item \textbf{Product:} Representa produtos cadastrados no sistema com SKU, código de barras (EAN), estoque mínimo, preço de custo e venda
+\item \textbf{Category:} Representa categorias para organização de produtos
+\item \textbf{Supplier:} Representa fornecedores de produtos
+\item \textbf{StockMovement:} Representa movimentações de estoque (entradas, saídas, ajustes) com motivo e rastreabilidade
+\end{itemize}
+
+\textbf{Principais relacionamentos:}
+
+\begin{itemize}
+\item User possui relacionamento 1:N com StockMovement (um usuário realiza várias movimentações)
+\item Product possui relacionamento 1:N com StockMovement (um produto tem várias movimentações)
+\item Product possui relacionamento N:1 com Category (vários produtos pertencem a uma categoria)
+\item Product possui relacionamento N:N com Supplier (vários produtos podem ter vários fornecedores)
+\item Product possui relacionamento com Cloudinary para armazenamento de imagens
+\item User possui relacionamento com Google Auth para autenticação
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{CLASSE.png}
+\caption{Diagrama de Classes do Sistema}
+\label{fig:classes}
+\end{figure}
+
+\section{Matriz de Rastreabilidade}
+
+A matriz de rastreabilidade estabelece a relação entre requisitos funcionais (RF) e requisitos não funcionais (RNF), bem como entre requisitos e elementos de modelagem (casos de uso e classes do diagrama de classes).
+
+A matriz permite verificar se todos os requisitos foram contemplados na modelagem e identificar possíveis lacunas ou inconsistências. A relação é marcada com ``X'' quando há dependência entre requisitos ou quando um requisito é implementado através de um elemento de modelagem.
+
+\subsection{Matriz RF x RF (Dependências entre Requisitos Funcionais)}
+
+A matriz de dependências entre requisitos funcionais foi dividida em duas partes para melhor visualização devido ao grande número de requisitos. A marcação ``X'' indica dependência entre os requisitos.
+
+\subsubsection{Parte 1: RF01 a RF10}
+
+\begin{footnotesize}
+\begin{longtable}{|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+       & RF01 & RF02 & RF03 & RF04 & RF05 & RF06 & RF07 & RF08 & RF09 & RF10 \\
+\hline
+\endfirsthead
+\hline
+       & RF01 & RF02 & RF03 & RF04 & RF05 & RF06 & RF07 & RF08 & RF09 & RF10 \\
+\hline
+\endhead
+RF01  &  -   &  X   &  X   &  X   &  X   &  X   &  X   &  X   &  X   &  X   \\
+\hline
+RF02  &  X   &  -   &  X   &  -   &  X   &  X   &  X   &  X   &  X   &  X   \\
+\hline
+RF03  &  X   &  X   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF04  &  X   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF05  &  X   &  X   &  -   &  -   &  -   &  X   &  X   &  X   &  X   &  X   \\
+\hline
+RF06  &  X   &  X   &  -   &  -   &  X   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF07  &  X   &  X   &  -   &  -   &  X   &  -   &  -   &  -   &  -   &  X   \\
+\hline
+RF08  &  X   &  X   &  -   &  -   &  X   &  -   &  -   &  -   &  -   &  X   \\
+\hline
+RF09  &  X   &  X   &  -   &  -   &  X   &  -   &  -   &  -   &  -   &  X   \\
+\hline
+RF10  &  X   &  X   &  -   &  -   &  X   &  -   &  X   &  X   &  X   &  -   \\
+\hline
+RF11  &  X   &  X   &  -   &  -   &  X   &  X   &  X   &  X   &  X   &  X   \\
+\hline
+RF12  &  X   &  X   &  -   &  -   &  X   &  X   &  -   &  -   &  -   &  -   \\
+\hline
+RF13  &  X   &  X   &  -   &  -   &  X   &  -   &  X   &  X   &  X   &  X   \\
+\hline
+RF14  &  X   &  X   &  -   &  -   &  X   &  -   &  X   &  X   &  X   &  X   \\
+\hline
+RF15  &  X   &  X   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF16  &  X   &  X   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF17  &  X   &  X   &  -   &  -   &  X   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF18  &  X   &  X   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF19  &  X   &  X   &  -   &  -   &  X   &  X   &  X   &  X   &  X   &  X   \\
+\hline
+RF20  &  X   &  X   &  -   &  -   &  X   &  X   &  X   &  X   &  X   &  X   \\
+\hline
+\end{longtable}
+\end{footnotesize}
+
+\subsubsection{Parte 2: RF11 a RF20}
+
+\begin{footnotesize}
+\begin{longtable}{|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+       & RF11 & RF12 & RF13 & RF14 & RF15 & RF16 & RF17 & RF18 & RF19 & RF20 \\
+\hline
+\endfirsthead
+\hline
+       & RF11 & RF12 & RF13 & RF14 & RF15 & RF16 & RF17 & RF18 & RF19 & RF20 \\
+\hline
+\endhead
+RF01  &  X   &  X   &  X   &  X   &  X   &  X   &  X   &  X   &  X   &  X   \\
+\hline
+RF02  &  X   &  X   &  X   &  X   &  X   &  X   &  X   &  X   &  X   &  X   \\
+\hline
+RF03  &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF04  &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF05  &  X   &  X   &  X   &  X   &  -   &  -   &  -   &  -   &  -   &  X   \\
+\hline
+RF06  &  X   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF07  &  -   &  X   &  -   &  X   &  -   &  -   &  -   &  -   &  -   &  X   \\
+\hline
+RF08  &  -   &  X   &  -   &  X   &  -   &  -   &  -   &  -   &  -   &  X   \\
+\hline
+RF09  &  -   &  X   &  -   &  X   &  -   &  -   &  -   &  -   &  -   &  X   \\
+\hline
+RF10  &  -   &  X   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF11  &  -   &  X   &  -   &  X   &  -   &  -   &  -   &  -   &  -   &  X   \\
+\hline
+RF12  &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF13  &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF14  &  X   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  X   \\
+\hline
+RF15  &  -   &  X   &  X   &  -   &  -   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF16  &  -   &  -   &  -   &  -   &  -   &  -   &  X   &  -   &  -   &  -   \\
+\hline
+RF17  &  -   &  -   &  -   &  -   &  X   &  -   &  -   &  -   &  -   &  -   \\
+\hline
+RF18  &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  -   &  X   &  X   \\
+\hline
+RF19  &  X   &  X   &  X   &  X   &  X   &  X   &  X   &  X   &  -   &  X   \\
+\hline
+RF20  &  X   &  X   &  X   &  X   &  X   &  X   &  X   &  X   &  X   &  -   \\
+\hline
+\end{longtable}
+\end{footnotesize}
+
+\section{Planejamento do Scrum com Trello}
+
+\subsection{Metodologia Adotada}
+
+O projeto utiliza uma abordagem híbrida combinando Scrum e Kanban para gerenciamento ágil. O Scrum fornece a estrutura de sprints, cerimônias e papéis, enquanto o Kanban oferece visualização contínua do fluxo de trabalho através de um board.
+
+\subsection{Estrutura Scrum}
+
+\textbf{Sprints:} O projeto será dividido em 4 sprints de 2 semanas cada, totalizando 8 semanas (2 meses).
+
+\subsection{Board Kanban}
+
+O board Kanban está organizado nas seguintes colunas:
+
+\begin{itemize}
+\item \textbf{Backlog:} Todas as tarefas identificadas e priorizadas
+\item \textbf{To Do:} Tarefas a serem iniciadas no sprint atual
+\item \textbf{In Progress:} Trabalho em andamento
+\item \textbf{Review:} Código/documentação em revisão
+\item \textbf{Done:} Tarefas concluídas
+\end{itemize}
+
+\subsection{Link do Trello}
+
+O quadro Kanban do projeto está disponível no Trello e compartilhado com a professora e monitora da disciplina.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{KANBAN.png}
+\caption{Board Kanban no Trello}
+\label{fig:trello}
+\end{figure}
+
+\section{Conclusões}
+
+\subsection{Conclusão Geral}
+
+O projeto de manutenção do sistema Stock Manager proporcionou experiência valiosa em manutenção de software, demonstrando a importância de análise sistemática, documentação adequada e aplicação de metodologias ágeis. A transformação de um sistema não funcional em uma aplicação robusta requer compreensão profunda do código existente, identificação precisa de problemas, e execução cuidadosa de refatorações.
+
+\textbf{Nota sobre o desenvolvimento:} O projeto foi inicialmente planejado para ser desenvolvido em equipe, porém, durante o desenvolvimento, Luan Ravel desistiu da disciplina. Dessa forma, o projeto foi concluído individualmente por Antônio Lisboa, mantendo todos os objetivos e entregas planejadas.
+
+Os principais aprendizados incluem a compreensão de que manutenção de software é uma atividade complexa que vai além de simples correção de bugs, envolvendo análise de arquitetura, refatoração de código, e melhoria contínua. A aplicação de metodologias ágeis (Scrum + Kanban) facilitou a organização do trabalho e permitiu entregas incrementais, enquanto a documentação completa (requisitos, diagramas UML, matriz de rastreabilidade) garante manutenibilidade futura do sistema.
+
+O trabalho também evidenciou a importância de boas práticas de desenvolvimento desde o início, pois problemas arquiteturais e falta de documentação dificultam significativamente a manutenção. A experiência prática com ferramentas modernas (Next.js, React, Express, TypeScript) e metodologias ágeis prepara adequadamente para o ambiente profissional de desenvolvimento de software.
+
+\subsection{Percepção Individual}
+
+\textbf{Percepção do Aluno - Antônio Lisboa:}
+
+Este projeto foi extremamente enriquecedor para minha formação como Ciêntista de computação. A experiência de trabalhar com um sistema legado e transformá-lo em uma aplicação funcional me proporcionou insights valiosos sobre a realidade do desenvolvimento de software. Aprendi que a manutenção de software requer paciência, análise cuidadosa e atenção aos detalhes.
+
+A parte mais desafiadora foi compreender o código existente sem documentação adequada, o que me ensinou a importância de documentar código durante o desenvolvimento. A aplicação prática de conceitos de engenharia de software, como especificação de requisitos, modelagem UML e rastreabilidade, consolidou conhecimentos teóricos de forma significativa.
+
+A utilização de metodologias ágeis (Scrum + Kanban) foi fundamental para organizar o trabalho individual, mostrando como ferramentas como Trello e práticas do Scrum podem estruturar e facilitar o desenvolvimento mesmo em projetos individuais. A experiência me preparou para enfrentar desafios similares no ambiente profissional, onde a manutenção de sistemas existentes é uma realidade constante. Trabalhar individualmente após a desistência do colega também desenvolveu habilidades de autonomia e autogerenciamento, essenciais para o desenvolvimento profissional.
+
+
+\section{Ata de Reunião}
+
+\subsection{Reunião 1 - Kickoff do Projeto}
+\textbf{Data:} 27/10/25  
+\textbf{Duração:} 2 horas  
+\textbf{Participantes:} Antônio Lisboa
+
+\textbf{Pauta:}
+\begin{itemize}
+\item Apresentação do projeto e objetivos
+\item Análise inicial do código existente
+\item Identificação de problemas principais
+\item Definição de metodologia de trabalho (Scrum + Kanban)
+\item Criação do board no Trello
+\item Divisão inicial de tarefas
+\end{itemize}
+
+\textbf{Decisões:}
+\begin{itemize}
+\item Utilizar Scrum com sprints de 2 semanas
+\item Criar board Kanban no Trello para gerenciamento
+\item Priorizar correção do sistema de autenticação
+\item Documentar todas as reuniões e decisões
+\end{itemize}
+
+\textbf{Ações:}
+\begin{itemize}
+\item[ ] Analisar código do frontend e backend, identificando problemas
+\item[ ] Criar board no Trello e estruturar backlog inicial
+\end{itemize}
+
+\subsection{Reunião 2 - Análise de Requisitos}
+\textbf{Data:} 28/10/25  
+\textbf{Duração:} 1h30min  
+\textbf{Participantes:} Antônio Lisboa
+
+\textbf{Pauta:}
+\begin{itemize}
+\item Apresentação dos problemas identificados
+\item Elicitação de requisitos utilizando brainstorming
+\item Priorização de requisitos funcionais e não funcionais
+\item Definição de escopo do projeto
+\end{itemize}
+
+\textbf{Decisões:}
+\begin{itemize}
+\item Lista inicial de 20 requisitos funcionais
+\item Lista inicial de 15 requisitos não funcionais
+\item Foco em funcionalidades essenciais primeiro
+\item Funcionalidades desejáveis podem ser implementadas se houver tempo
+\end{itemize}
+
+\textbf{Ações:}
+\begin{itemize}
+\item[ ] Documentar requisitos funcionais e não funcionais
+\item[ ] Revisar e validar requisitos
+\end{itemize}
+
+\subsection{Reunião 3 - Modelagem UML}
+\textbf{Data:} 29/10/25  
+\textbf{Duração:} 2 horas  
+\textbf{Participantes:} Antônio Lisboa
+
+\textbf{Pauta:}
+\begin{itemize}
+\item Definição de atores do sistema
+\item Criação de diagrama de casos de uso
+\item Criação de diagrama de classes
+\item Validação dos diagramas
+\end{itemize}
+
+\textbf{Decisões:}
+\begin{itemize}
+\item 3 atores principais: Administrador (Super User), Gerente de Estoque (Nível Tático), Operador Logístico (Nível Operacional)
+\item 10+ casos de uso identificados
+\item 8+ classes no diagrama de classes
+\item Utilizar ferramenta apropriada para criação dos diagramas UML
+\end{itemize}
+
+\textbf{Ações:}
+\begin{itemize}
+\item[ ] Criar diagrama de casos de uso e diagrama de classes
+\item[ ] Revisar e validar diagramas
+\end{itemize}
+
+\subsection{Reunião 4 - Planejamento de Sprints}
+\textbf{Data:} 30/10/25   
+\textbf{Duração:} 1h30min  
+\textbf{Participantes:} Antônio Lisboa
+
+\textbf{Pauta:}
+\begin{itemize}
+\item Planejamento do Sprint 1 (Análise e Planejamento)
+\item Definição de tarefas e estimativas
+\item Atualização do board Trello
+\item Definição de critérios de aceitação
+\end{itemize}
+
+\textbf{Decisões:}
+\begin{itemize}
+\item Sprint 1 focado em análise e documentação
+\item Tarefas organizadas e priorizadas
+\item Revisão diária do progresso
+\end{itemize}
+
+\textbf{Ações:}
+\begin{itemize}
+\item[ ] Atualizar Trello com tarefas do Sprint 1 e revisar validações
+\item[ ] Iniciar execução das tarefas
+\end{itemize}
+
+\subsection{Reunião 5 - Sprint Review 1}
+\textbf{Data:} 02/11/25    
+\textbf{Duração:} 1 hora  
+\textbf{Participantes:} Antônio Lisboa
+
+\textbf{Pauta:}
+\begin{itemize}
+\item Revisão do trabalho realizado no Sprint 1
+\item Apresentação dos resultados
+\item Identificação de bloqueios e problemas
+\item Planejamento do Sprint 2
+\end{itemize}
+
+\textbf{Decisões:}
+\begin{itemize}
+\item Sprint 1 concluído com sucesso
+\item Documentação de requisitos e diagramas finalizados
+\item Sprint 2 focado em correção de problemas críticos
+\end{itemize}
+
+\textbf{Ações:}
+\begin{itemize}
+\item[ ] Iniciar Sprint 2 - Correção de problemas críticos
+\end{itemize}
+
+\subsection{Design do Figma}
+
+O design do sistema foi elaborado no Figma, servindo como referência visual para o desenvolvimento da interface. Os protótipos incluem todas as telas principais do sistema, garantindo uma experiência de usuário consistente e moderna.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{FIGMA1.png}
+\caption{Protótipo Figma - Telas Principais}
+\label{fig:figma1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{FIGMA2.png}
+\caption{Protótipo Figma - Detalhes e Componentes}
+\label{fig:figma2}
+\end{figure}
+
+\section{Comparação com a Primeira Versão do Documento}
+
+Esta seção apresenta as principais mudanças e evoluções realizadas no documento de especificação de requisitos em relação à primeira versão, refletindo o amadurecimento do projeto e a incorporação de melhores práticas de engenharia de software.
+
+\subsection{Mudanças na Arquitetura de Usuários e Permissões}
+
+\textbf{Primeira Versão:}
+\begin{itemize}
+\item 3 tipos de usuários: Administrador do Sistema, Operador de Estoque, Analista Financeiro
+\item Controle de acesso básico sem matriz de permissões detalhada
+\item Autenticação via email e senha com JWT
+\end{itemize}
+
+\textbf{Versão Atual:}
+\begin{itemize}
+\item 3 níveis hierárquicos bem definidos: Administrador (Super User), Gerente de Estoque (Nível Tático), Operador Logístico/Estoquista (Nível Operacional)
+\item Matriz de permissões detalhada com RBAC (Role-Based Access Control)
+\item Autenticação via Google Auth (não armazena senhas localmente)
+\item Separação clara de responsabilidades por nível hierárquico
+\end{itemize}
+
+\subsection{Mudanças nos Requisitos Funcionais}
+
+\textbf{Primeira Versão:}
+\begin{itemize}
+\item 20 requisitos funcionais (RF01 a RF20)
+\item Produtos com campos básicos (nome, descrição, preço)
+\item Sem obrigatoriedade de SKU ou código de barras
+\item Sem produtos perecíveis
+\item Sem dashboard e alertas
+\item Sem cálculo automático de custo médio
+\end{itemize}
+
+\textbf{Versão Atual:}
+\begin{itemize}
+\item 34 requisitos funcionais (RF01 a RF34)
+\item Produtos com campos obrigatórios: Nome, SKU (código único), Código de Barras (EAN), Categoria, Preço de Custo, Preço de Venda e Estoque Mínimo
+\item Suporte a produtos perecíveis com data de validade (RF27)
+\item Dashboard com alertas de estoque baixo, produtos próximos da validade e valor total do estoque (RF24, RF29)
+\item Cálculo automático de custo médio nas entradas (RF22)
+\item Upload de imagens via Cloudinary (RF21)
+\item Rastreabilidade e integridade dos dados (RF31, RF32)
+\item Importação futura via XML de Nota Fiscal (RF30)
+\end{itemize}
+
+\subsection{Mudanças nos Requisitos Não Funcionais}
+
+\textbf{Primeira Versão:}
+\begin{itemize}
+\item 15 requisitos não funcionais (RNF01 a RNF15)
+\item Armazenamento de senhas com hash bcrypt
+\item Controle de acesso baseado em perfis genérico
+\end{itemize}
+
+\textbf{Versão Atual:}
+\begin{itemize}
+\item 22 requisitos não funcionais (RNF01 a RNF22)
+\item Autenticação via Google Auth (não armazena senhas - RNF04)
+\item RBAC com 3 níveis hierárquicos bem definidos (RNF05, RNF18)
+\item Integração com Cloudinary para imagens (RNF17)
+\item Rastreabilidade completa de operações (RNF18)
+\item Integridade referencial dos dados (RNF19)
+\item Interface otimizada para operações frequentes (RNF20)
+\item Suporte a leitura de código de barras (RNF21)
+\item Cálculo automático de custo médio (RNF22)
+\end{itemize}
+
+\subsection{Mudanças na Modelagem}
+
+\textbf{Primeira Versão:}
+\begin{itemize}
+\item Diagrama de casos de uso básico
+\item Diagrama de classes textual
+\item Sem diagrama entidade-relacionamento (DER)
+\item Atores: Administrador, Operador de Estoque, Analista Financeiro
+\end{itemize}
+
+\textbf{Versão Atual:}
+\begin{itemize}
+\item Diagrama de casos de uso atualizado com novos relacionamentos (Google Auth, Cloudinary, Verificar Estoque)
+\item Diagrama de classes com imagem (CLASSE.png)
+\item Diagrama entidade-relacionamento (DER.png) adicionado
+\item Casos de uso detalhados (UC01 a UC05) com descrições completas
+\item Atores atualizados: Administrador, Gerente de Estoque, Operador Logístico
+\item Relacionamentos com sistemas externos (Google Auth, Cloudinary) documentados
+\end{itemize}
+
+\subsection{Mudanças nas Regras de Negócio}
+
+\textbf{Primeira Versão:}
+\begin{itemize}
+\item Regras básicas de negócio
+\item Produtos com nome, descrição e preço obrigatórios
+\item Sem estoque mínimo
+\item Sem validação de código de barras
+\end{itemize}
+
+\textbf{Versão Atual:}
+\begin{itemize}
+\item Regras de negócio expandidas e detalhadas
+\item Produtos com SKU, código de barras (EAN) e estoque mínimo obrigatórios
+\item Produtos com histórico não podem ser deletados (apenas inativados)
+\item Cálculo automático de custo médio
+\item Bloqueio de saída quando estoque insuficiente
+\item Ajustes de inventário apenas para Gerente/Administrador
+\item Rastreabilidade completa de operações
+\item Integridade dos dados (número físico deve bater com o virtual)
+\end{itemize}
+
+\subsection{Mudanças na Documentação Visual}
+
+\textbf{Primeira Versão:}
+\begin{itemize}
+\item Diagrama de casos de uso básico
+\item Sem imagens de design
+\item Board Kanban referenciado mas sem imagem específica
+\end{itemize}
+
+\textbf{Versão Atual:}
+\begin{itemize}
+\item Diagrama de casos de uso atualizado (Caso de uso.png)
+\item Diagrama entidade-relacionamento (DER.png)
+\item Diagrama de classes (CLASSE.png)
+\item Protótipos do Figma (FIGMA1.png e FIGMA2.png)
+\item Board Kanban visual (KANBAN.png)
+\item Todas as imagens integradas no documento
+\end{itemize}
+
+\subsection{Resumo das Principais Melhorias}
+
+As principais melhorias realizadas na versão atual do documento incluem:
+
+\begin{enumerate}
+\item \textbf{Arquitetura mais robusta:} Implementação de RBAC com 3 níveis hierárquicos claramente definidos, garantindo melhor controle de acesso e segurança.
+
+\item \textbf{Autenticação moderna:} Migração de autenticação tradicional (email/senha) para Google Auth, aumentando segurança e usabilidade.
+
+\item \textbf{Requisitos mais completos:} Expansão de 20 para 34 requisitos funcionais e de 15 para 22 requisitos não funcionais, cobrindo aspectos importantes como rastreabilidade, integridade e produtos perecíveis.
+
+\item \textbf{Modelagem aprimorada:} Adição de diagrama entidade-relacionamento e atualização de diagramas de casos de uso e classes com relacionamentos mais detalhados.
+
+\item \textbf{Regras de negócio mais específicas:} Definição clara de campos obrigatórios, validações e regras de integridade dos dados.
+
+\item \textbf{Documentação visual completa:} Inclusão de todos os diagramas e protótipos visuais, facilitando a compreensão do sistema.
+
+\item \textbf{Integrações documentadas:} Documentação clara das integrações com Google Auth e Cloudinary, sistemas externos essenciais para o funcionamento do sistema.
+\end{enumerate}
+
+Essas mudanças refletem o amadurecimento do projeto e a incorporação de melhores práticas de engenharia de software, resultando em um documento mais completo, preciso e alinhado com as necessidades reais de um sistema profissional de gerenciamento de estoque.
+
+\section{Etapa 3 - Ciclo de Manutenção do Software}
+
+A Etapa 3 do projeto consiste no ciclo de manutenção do software com base nas solicitações de mudanças recebidas de outras equipes durante a apresentação do projeto. Esta etapa demonstra o processo completo de análise, planejamento e implementação de melhorias no sistema.
+
+\subsection{Documentação da Etapa 3}
+
+A documentação completa da Etapa 3 está disponível em documento separado: \texttt{etapa3\_manutencao.tex}
+
+\subsection{Resumo da Etapa 3}
+
+Durante a apresentação do projeto, foram recebidas 20 sugestões de 10 equipes diferentes. Após análise técnica detalhada, foram selecionadas 2 solicitações para implementação:
+
+\begin{enumerate}
+\item \textbf{SOL-001:} Exportação de dados analíticos em múltiplos formatos (CSV, PDF, Excel)\\
+\textit{Origem:} Equipe 4 - Sugestão 01\\
+\textit{Tipo:} Aperfeiçoamento do Sistema\\
+\textit{Status:} Aprovado
+
+\item \textbf{SOL-002:} Relatórios com informações importantes de vendas\\
+\textit{Origem:} Equipe 2 - Sugestão 01\\
+\textit{Tipo:} Aperfeiçoamento do Sistema\\
+\textit{Status:} Aprovado
+\end{enumerate}
+
+\subsection{Impacto na Documentação}
+
+As implementações da Etapa 3 resultarão em atualizações nos seguintes artefatos:
+
+\begin{itemize}
+\item Novo Requisito Funcional: RF35 (Relatórios de vendas)
+\item Alteração nos Requisitos: RF13, RF14, RF15 (expansão de funcionalidades)
+\item Novo Caso de Uso: UC06 (Gerar Relatório de Vendas)
+\item Atualização da Classe: ReportService (novos métodos)
+\item Atualização da Matriz de Rastreabilidade
+\item Novas telas na interface do usuário
+\end{itemize}
+
+Para detalhes completos sobre análise de impacto, planejamento, cronograma e implementação, consulte o documento \texttt{etapa3\_manutencao.tex}.
+
+\end{document}

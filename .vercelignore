@@ -1,0 +1,5 @@
+server/
+*.md
+Documents/
+node_modules/
+
