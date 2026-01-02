@@ -180,8 +180,8 @@ export const getAllProducts = async (): Promise<Product[]> => {
     sku: row.sku,
     barcode: row.sku,
     categoryId: row.categoryId,
-    priceCost: parseFloat(row.priceCost),
-    priceSale: parseFloat(row.priceSale),
+    priceCost: Number.parseFloat(row.priceCost),
+    priceSale: Number.parseFloat(row.priceSale),
     minStock: row.minStock,
     stockQuantity: row.stockQuantity,
     supplierIds: row.supplierIds || [],
@@ -217,8 +217,8 @@ export const createProduct = async (product: Omit<Product, 'id'>): Promise<Produ
     sku: row.sku,
     barcode: row.sku,
     categoryId: row.categoryId,
-    priceCost: parseFloat(row.priceCost),
-    priceSale: parseFloat(row.priceSale),
+    priceCost: Number.parseFloat(row.priceCost),
+    priceSale: Number.parseFloat(row.priceSale),
     minStock: row.minStock,
     stockQuantity: row.stockQuantity,
     supplierIds: row.supplierId ? [row.supplierId] : [],
@@ -259,8 +259,8 @@ export const updateProduct = async (id: string, product: Omit<Product, 'id'>): P
     sku: row.sku,
     barcode: row.sku,
     categoryId: row.categoryId,
-    priceCost: parseFloat(row.priceCost),
-    priceSale: parseFloat(row.priceSale),
+    priceCost: Number.parseFloat(row.priceCost),
+    priceSale: Number.parseFloat(row.priceSale),
     minStock: row.minStock,
     stockQuantity: row.stockQuantity,
     supplierIds: row.supplierId ? [row.supplierId] : [],
@@ -372,7 +372,7 @@ export const getStockReport = async () => {
     sku: row.sku,
     stockQuantity: row.stockQuantity,
     minStock: row.minStock,
-    priceCost: parseFloat(row.priceCost || 0),
+    priceCost: Number.parseFloat(row.priceCost || 0),
     belowMin: row.belowMin,
   }));
 };
@@ -388,8 +388,8 @@ export const getSalesReport = async () => {
   `);
   const row = result.rows[0];
   return {
-    totalSales: parseFloat(row.totalSales) || 0,
-    totalItems: parseInt(row.totalItems) || 0,
+    totalSales: Number.parseFloat(row.totalSales) || 0,
+    totalItems: Number.parseInt(row.totalItems) || 0,
   };
 };
 
@@ -445,21 +445,21 @@ export const getDetailedSalesReport = async () => {
       productId: row.id,
       productName: row.productName,
       sku: row.sku,
-      totalQuantity: parseInt(row.totalQuantity) || 0,
-      totalRevenue: parseFloat(row.totalRevenue) || 0,
-      saleCount: parseInt(row.saleCount) || 0,
+      totalQuantity: Number.parseInt(row.totalQuantity) || 0,
+      totalRevenue: Number.parseFloat(row.totalRevenue) || 0,
+      saleCount: Number.parseInt(row.saleCount) || 0,
     })),
     salesByPeriod: salesByPeriod.rows.map(row => ({
       date: row.date.toISOString().split('T')[0],
-      saleCount: parseInt(row.saleCount) || 0,
-      totalQuantity: parseInt(row.totalQuantity) || 0,
-      totalRevenue: parseFloat(row.totalRevenue) || 0,
+      saleCount: Number.parseInt(row.saleCount) || 0,
+      totalQuantity: Number.parseInt(row.totalQuantity) || 0,
+      totalRevenue: Number.parseFloat(row.totalRevenue) || 0,
     })),
     topProducts: topProducts.rows.map(row => ({
       productName: row.productName,
       sku: row.sku,
-      totalQuantity: parseInt(row.totalQuantity) || 0,
-      totalRevenue: parseFloat(row.totalRevenue) || 0,
+      totalQuantity: Number.parseInt(row.totalQuantity) || 0,
+      totalRevenue: Number.parseFloat(row.totalRevenue) || 0,
     })),
   };
 };
@@ -476,7 +476,7 @@ export const getSystemSettings = async (): Promise<Record<string, any>> => {
     // Converter valores booleanos e numéricos
     if (value === 'true') value = true;
     else if (value === 'false') value = false;
-    else if (!isNaN(Number(value)) && value !== '') value = Number(value);
+    else if (!Number.isNaN(Number(value)) && value !== '') value = Number(value);
     
     settings[key] = value;
   }

@@ -156,10 +156,11 @@ export default function SuppliersPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label htmlFor="supplier-name" className="block text-sm font-medium text-zinc-700 mb-1">
                   Nome do Fornecedor *
                 </label>
                 <input
+                  id="supplier-name"
                   type="text"
                   required
                   value={formData.name}
@@ -169,10 +170,11 @@ export default function SuppliersPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label htmlFor="supplier-document" className="block text-sm font-medium text-zinc-700 mb-1">
                   CNPJ/CPF
                 </label>
                 <input
+                  id="supplier-document"
                   type="text"
                   value={formData.documentId}
                   onChange={(e) => setFormData({ ...formData, documentId: e.target.value })}
@@ -181,10 +183,11 @@ export default function SuppliersPage() {
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label htmlFor="supplier-email" className="block text-sm font-medium text-zinc-700 mb-1">
                   Email de Contato
                 </label>
                 <input
+                  id="supplier-email"
                   type="email"
                   value={formData.contactEmail}
                   onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}

@@ -48,14 +48,32 @@ export default function Home() {
 
       {/* Modal de Doação */}
       {showDonation && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowDonation(false)}>
-          <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" 
+          onClick={() => setShowDonation(false)}
+          role="button"
+          aria-label="Fechar modal"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setShowDonation(false);
+            }
+          }}
+        >
+          <div 
+            className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl" 
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="donation-title"
+          >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
                   <Heart className="w-6 h-6 text-red-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-zinc-900">Apoie o Projeto</h3>
+                <h3 id="donation-title" className="text-2xl font-bold text-zinc-900">Apoie o Projeto</h3>
               </div>
               <button
                 onClick={() => setShowDonation(false)}
@@ -100,8 +118,8 @@ export default function Home() {
             <span>100% Gratuito</span>
           </div>
           <h1 className="text-5xl lg:text-7xl font-bold text-zinc-900 mb-6">
-            Sistema de Gestão de
-            <span className="text-blue-600"> Estoque</span>
+            Sistema de Gestão de{' '}
+            <span className="text-blue-600">Estoque</span>
             <br />
             para sua Empresa
           </h1>

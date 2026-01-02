@@ -115,10 +115,11 @@ export default function SettingsPage() {
           <h3 className="text-lg font-semibold text-zinc-900 mb-4">Configurações Gerais</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="setting-system-name" className="block text-sm font-medium text-zinc-700 mb-1">
                 Nome do Sistema
               </label>
               <input
+                id="setting-system-name"
                 type="text"
                 value={settings.systemName}
                 onChange={(e) => setSettings({ ...settings, systemName: e.target.value })}
@@ -126,10 +127,11 @@ export default function SettingsPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="setting-currency" className="block text-sm font-medium text-zinc-700 mb-1">
                 Moeda Padrão
               </label>
               <select
+                id="setting-currency"
                 value={settings.defaultCurrency}
                 onChange={(e) => setSettings({ ...settings, defaultCurrency: e.target.value })}
                 className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
@@ -154,8 +156,9 @@ export default function SettingsPage() {
                   Notificar quando estoque estiver abaixo do mínimo (RF23, RF29)
                 </p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label htmlFor="setting-min-stock-alert" className="relative inline-flex items-center cursor-pointer">
                 <input
+                  id="setting-min-stock-alert"
                   type="checkbox"
                   checked={settings.minStockAlert}
                   onChange={(e) => setSettings({ ...settings, minStockAlert: e.target.checked })}
@@ -174,8 +177,9 @@ export default function SettingsPage() {
                   Calcular custo médio automaticamente nas entradas (RF22)
                 </p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label htmlFor="setting-auto-calculate" className="relative inline-flex items-center cursor-pointer">
                 <input
+                  id="setting-auto-calculate"
                   type="checkbox"
                   checked={settings.autoCalculateCost}
                   onChange={(e) => setSettings({ ...settings, autoCalculateCost: e.target.checked })}
@@ -194,8 +198,9 @@ export default function SettingsPage() {
                   Notificar sobre produtos próximos da validade (RF27)
                 </p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label htmlFor="setting-expiry-alerts" className="relative inline-flex items-center cursor-pointer">
                 <input
+                  id="setting-expiry-alerts"
                   type="checkbox"
                   checked={settings.enableExpiryAlerts}
                   onChange={(e) => setSettings({ ...settings, enableExpiryAlerts: e.target.checked })}
@@ -211,15 +216,16 @@ export default function SettingsPage() {
           <h3 className="text-lg font-semibold text-zinc-900 mb-4">Configurações de Desempenho</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="setting-retention" className="block text-sm font-medium text-zinc-700 mb-1">
                 Período de Retenção de Histórico (meses)
               </label>
               <input
+                id="setting-retention"
                 type="number"
                 min="1"
                 max="60"
                 value={settings.retentionPeriod}
-                onChange={(e) => setSettings({ ...settings, retentionPeriod: parseInt(e.target.value) })}
+                onChange={(e) => setSettings({ ...settings, retentionPeriod: Number.parseInt(e.target.value) })}
                 className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
               />
               <p className="text-xs text-zinc-700 mt-1">
@@ -227,16 +233,17 @@ export default function SettingsPage() {
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="setting-max-products" className="block text-sm font-medium text-zinc-700 mb-1">
                 Limite Máximo de Produtos
               </label>
               <input
+                id="setting-max-products"
                 type="number"
                 min="100"
                 max="100000"
                 step="100"
                 value={settings.maxProducts}
-                onChange={(e) => setSettings({ ...settings, maxProducts: parseInt(e.target.value) })}
+                onChange={(e) => setSettings({ ...settings, maxProducts: Number.parseInt(e.target.value) })}
                 className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
               />
               <p className="text-xs text-zinc-700 mt-1">
@@ -258,8 +265,9 @@ export default function SettingsPage() {
                   Habilitar suporte a leitura de código de barras (RNF21)
                 </p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label htmlFor="setting-barcode-scan" className="relative inline-flex items-center cursor-pointer">
                 <input
+                  id="setting-barcode-scan"
                   type="checkbox"
                   checked={settings.enableBarcodeScan}
                   onChange={(e) => setSettings({ ...settings, enableBarcodeScan: e.target.checked })}

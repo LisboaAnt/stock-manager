@@ -154,10 +154,11 @@ export default function HistoryPage() {
       <div className="bg-white border rounded-xl p-4">
         <div className={`grid ${canViewAll ? 'grid-cols-1 md:grid-cols-6' : 'grid-cols-1 md:grid-cols-4'} gap-4`}>
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1">
+            <label htmlFor="filter-product" className="block text-sm font-medium text-zinc-700 mb-1">
               Produto
             </label>
             <select
+              id="filter-product"
               value={filters.productId}
               onChange={(e) => setFilters({ ...filters, productId: e.target.value })}
               className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-zinc-900"
@@ -170,10 +171,11 @@ export default function HistoryPage() {
           </div>
           {canViewAll && (
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="filter-user" className="block text-sm font-medium text-zinc-700 mb-1">
                 Usuário
               </label>
               <select
+                id="filter-user"
                 value={filters.userId}
                 onChange={(e) => setFilters({ ...filters, userId: e.target.value })}
                 className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-zinc-900"
@@ -186,10 +188,11 @@ export default function HistoryPage() {
             </div>
           )}
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1">
+            <label htmlFor="filter-type" className="block text-sm font-medium text-zinc-700 mb-1">
               Tipo de Movimentação
             </label>
             <select
+              id="filter-type"
               value={filters.type}
               onChange={(e) => setFilters({ ...filters, type: e.target.value as any })}
               className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-zinc-900"
@@ -201,10 +204,11 @@ export default function HistoryPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1">
+            <label htmlFor="filter-start-date" className="block text-sm font-medium text-zinc-700 mb-1">
               Data Inicial
             </label>
             <input
+              id="filter-start-date"
               type="date"
               value={filters.startDate}
               onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
@@ -212,10 +216,11 @@ export default function HistoryPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1">
+            <label htmlFor="filter-end-date" className="block text-sm font-medium text-zinc-700 mb-1">
               Data Final
             </label>
             <input
+              id="filter-end-date"
               type="date"
               value={filters.endDate}
               onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}

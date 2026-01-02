@@ -88,9 +88,10 @@ export default function LoginPage() {
             </div>
           </div>
           <form className="flex flex-col gap-4" onSubmit={onSubmit}>
-          <label className="flex flex-col gap-1 text-sm text-zinc-700">
+          <label htmlFor="login-email" className="flex flex-col gap-1 text-sm text-zinc-700">
             Email
             <input
+              id="login-email"
               className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-zinc-900"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -98,10 +99,11 @@ export default function LoginPage() {
               required
             />
           </label>
-          <label className="flex flex-col gap-1 text-sm text-zinc-700">
+          <label htmlFor="login-password" className="flex flex-col gap-1 text-sm text-zinc-700">
             Senha
             <div className="relative">
               <input
+                id="login-password"
                 className="border rounded-lg px-3 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-zinc-900"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

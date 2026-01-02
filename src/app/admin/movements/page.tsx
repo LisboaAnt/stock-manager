@@ -75,7 +75,7 @@ export default function MovementsPage() {
 
       // Validação para saída: verificar se há estoque suficiente
       if (activeTab === 'EXIT') {
-        if (parseInt(formData.quantity) > selectedProduct.stockQuantity) {
+        if (Number.parseInt(formData.quantity) > selectedProduct.stockQuantity) {
           setError(`Estoque insuficiente! Disponível: ${selectedProduct.stockQuantity} unidades (RF25)`);
           return;
         }
@@ -95,7 +95,7 @@ export default function MovementsPage() {
         productId: formData.productId,
         userId: userId,
         type: activeTab,
-        quantity: parseInt(formData.quantity),
+        quantity: Number.parseInt(formData.quantity),
         reason: activeTab === 'EXIT' ? formData.reason : undefined,
         unitPrice: 0, // TODO: Calcular baseado no produto
         notes: formData.notes,
@@ -206,10 +206,11 @@ export default function MovementsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {activeTab === 'ENTRY' && (
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label htmlFor="movement-supplier" className="block text-sm font-medium text-zinc-700 mb-1">
                   Fornecedor *
                 </label>
                 <select
+                  id="movement-supplier"
                   required
                   value={formData.supplierId}
                   onChange={(e) => setFormData({ ...formData, supplierId: e.target.value })}
@@ -224,10 +225,11 @@ export default function MovementsPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="movement-product" className="block text-sm font-medium text-zinc-700 mb-1">
                 Produto *
               </label>
               <select
+                id="movement-product"
                 required
                 value={formData.productId}
                 onChange={(e) => setFormData({ ...formData, productId: e.target.value })}
@@ -243,7 +245,7 @@ export default function MovementsPage() {
             </div>
 
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="movement-quantity" className="flex items-center gap-2 text-sm font-medium text-zinc-700 mb-1">
                 Quantidade *
                 {activeTab === 'ADJUSTMENT' && (
                   <div className="relative group">
@@ -257,6 +259,7 @@ export default function MovementsPage() {
                 )}
               </label>
               <input
+                id="movement-quantity"
                 type="number"
                 required
                 min="1"
@@ -280,10 +283,11 @@ export default function MovementsPage() {
 
             {activeTab === 'EXIT' && (
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label htmlFor="movement-reason" className="block text-sm font-medium text-zinc-700 mb-1">
                   Motivo da Saída *
                 </label>
                 <select
+                  id="movement-reason"
                   required
                   value={formData.reason}
                   onChange={(e) => setFormData({ ...formData, reason: e.target.value as ExitReason })}
@@ -298,10 +302,11 @@ export default function MovementsPage() {
 
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="movement-notes" className="block text-sm font-medium text-zinc-700 mb-1">
                 Observações
               </label>
               <textarea
+                id="movement-notes"
                 value={formData.notes}
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                 className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900 placeholder:text-zinc-500"
@@ -328,7 +333,7 @@ export default function MovementsPage() {
                   <div>
                     <span className="text-zinc-700">Estoque Após:</span>
                     <p className="font-medium text-green-600">
-                      {selectedProduct.stockQuantity + (parseInt(formData.quantity) || 0)}
+                      {selectedProduct.stockQuantity + (Number.parseInt(formData.quantity) || 0)}
                     </p>
                   </div>
                 )}
@@ -336,11 +341,11 @@ export default function MovementsPage() {
                   <div>
                     <span className="text-zinc-700">Estoque Após:</span>
                     <p className={`font-medium ${
-                      (selectedProduct.stockQuantity - (parseInt(formData.quantity) || 0)) < selectedProduct.minStock
+                      (selectedProduct.stockQuantity - (Number.parseInt(formData.quantity) || 0)) < selectedProduct.minStock
                         ? 'text-red-600'
                         : 'text-zinc-900'
                     }`}>
-                      {selectedProduct.stockQuantity - (parseInt(formData.quantity) || 0)}
+                      {selectedProduct.stockQuantity - (Number.parseInt(formData.quantity) || 0)}
                     </p>
                   </div>
                 )}

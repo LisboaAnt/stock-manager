@@ -86,9 +86,9 @@ export default function ProductsPage() {
         sku: formData.sku,
         barcode: formData.barcode,
         categoryId: formData.categoryId || null,
-        priceCost: parseFloat(formData.priceCost),
-        priceSale: parseFloat(formData.priceSale),
-        minStock: parseInt(formData.minStock),
+        priceCost: Number.parseFloat(formData.priceCost),
+        priceSale: Number.parseFloat(formData.priceSale),
+        minStock: Number.parseInt(formData.minStock),
         stockQuantity: editingProduct ? editingProduct.stockQuantity : 0,
         supplierIds: formData.supplierIds,
       };
@@ -223,10 +223,11 @@ export default function ProductsPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">
+                  <label htmlFor="product-name" className="block text-sm font-medium text-zinc-700 mb-1">
                     Nome do Produto *
                   </label>
                   <input
+                    id="product-name"
                     type="text"
                     required
                     value={formData.name}
@@ -236,10 +237,11 @@ export default function ProductsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">
+                  <label htmlFor="product-sku" className="block text-sm font-medium text-zinc-700 mb-1">
                     SKU (Código Único) *
                   </label>
                   <input
+                    id="product-sku"
                     type="text"
                     required
                     value={formData.sku}
@@ -249,10 +251,11 @@ export default function ProductsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">
+                  <label htmlFor="product-barcode" className="block text-sm font-medium text-zinc-700 mb-1">
                     Código de Barras (EAN) *
                   </label>
                   <input
+                    id="product-barcode"
                     type="text"
                     required
                     value={formData.barcode}
@@ -262,10 +265,11 @@ export default function ProductsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">
+                  <label htmlFor="product-category" className="block text-sm font-medium text-zinc-700 mb-1">
                     Categoria *
                   </label>
                   <select
+                    id="product-category"
                     required
                     value={formData.categoryId}
                     onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
@@ -278,10 +282,11 @@ export default function ProductsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">
+                  <label htmlFor="product-price-cost" className="block text-sm font-medium text-zinc-700 mb-1">
                     Preço de Custo (R$) *
                   </label>
                   <input
+                    id="product-price-cost"
                     type="number"
                     step="0.01"
                     required
@@ -292,10 +297,11 @@ export default function ProductsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">
+                  <label htmlFor="product-price-sale" className="block text-sm font-medium text-zinc-700 mb-1">
                     Preço de Venda (R$) *
                   </label>
                   <input
+                    id="product-price-sale"
                     type="number"
                     step="0.01"
                     required
@@ -306,10 +312,11 @@ export default function ProductsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">
+                  <label htmlFor="product-min-stock" className="block text-sm font-medium text-zinc-700 mb-1">
                     Estoque Mínimo *
                   </label>
                   <input
+                    id="product-min-stock"
                     type="number"
                     required
                     min="0"
@@ -323,10 +330,11 @@ export default function ProductsPage() {
                   </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">
+                  <label htmlFor="product-suppliers" className="block text-sm font-medium text-zinc-700 mb-1">
                     Fornecedores
                   </label>
                   <select
+                    id="product-suppliers"
                     multiple
                     value={formData.supplierIds}
                     onChange={(e) => {

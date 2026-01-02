@@ -17,30 +17,12 @@ export default function CategoriesPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  
-  // Apenas Admin e Gerente podem acessar
-  const canAccess = userRole === 'ADMIN' || userRole === 'MANAGER';
-  
-  if (!canAccess) {
-    return (
-      <div className="space-y-6">
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <h2 className="text-xl font-semibold text-red-900 mb-2">Acesso Negado</h2>
-          <p className="text-red-700">
-            Você não tem permissão para acessar esta página. Apenas Administradores e Gerentes podem gerenciar categorias.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   const [formData, setFormData] = useState({
     name: '',
   });
 
-  useEffect(() => {
-    loadCategories();
-  }, []);
+  // Apenas Admin e Gerente podem acessar
+  const canAccess = userRole === 'ADMIN' || userRole === 'MANAGER';
 
   const loadCategories = async () => {
     try {
@@ -53,6 +35,12 @@ export default function CategoriesPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (canAccess) {
+      loadCategories();
+    }
+  }, [canAccess]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,6 +104,19 @@ export default function CategoriesPage() {
     c.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  if (!canAccess) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+          <h2 className="text-xl font-semibold text-red-900 mb-2">Acesso Negado</h2>
+          <p className="text-red-700">
+            Você não tem permissão para acessar esta página. Apenas Administradores e Gerentes podem gerenciar categorias.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -146,10 +147,11 @@ export default function CategoriesPage() {
           </h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="category-name" className="block text-sm font-medium text-zinc-700 mb-1">
                 Nome da Categoria *
               </label>
               <input
+                id="category-name"
                 type="text"
                 required
                 value={formData.name}
