@@ -227,14 +227,14 @@ export default function Home() {
             Valor totalmente acessível e seus dados sigilosos permanecem sob seu controle.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/login"
+          <Link
+            href="/login"
               className="px-8 py-4 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-            >
+          >
               Acessar Sistema
               <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
+          </Link>
+          <Link
               href="#contato"
               className="px-8 py-4 bg-blue-500 text-white rounded-lg text-lg font-semibold hover:bg-blue-400 transition-all border-2 border-blue-400 flex items-center justify-center gap-2"
             >
@@ -373,7 +373,7 @@ export default function Home() {
           <div className="mt-8 pt-8 border-t border-zinc-800 text-center text-sm text-zinc-500">
             <p>© {new Date().getFullYear()} Stock Manager. Desenvolvido por <a href="https://alemsys.digital/pt" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">Alemsys Digital</a>. Todos os direitos reservados.</p>
           </div>
-        </div>
+      </div>
       </footer>
     </div>
   );

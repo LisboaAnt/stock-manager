@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: stock-manager-api
+    env: node
+    plan: free
+    buildCommand: cd server && npm install && npm run build
+    startCommand: cd server && node dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MOCK_DATA
+        value: false
+      - key: PORT
+        value: 10000
+    healthCheckPath: /api/users/me
+

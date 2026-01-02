@@ -58,7 +58,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
   
   try {
-    const user = await getUserByEmail(email);
+  const user = await getUserByEmail(email);
     console.log(`[LOGIN] Usuário encontrado:`, user ? { id: user.id, email: user.email, hasPassword: !!user.passwordHash, isActive: user.isActive } : 'null');
     
     if (!user) {
@@ -83,17 +83,17 @@ app.post('/api/auth/login', async (req, res) => {
     
     if (!passwordMatch) {
       console.log(`[LOGIN] ❌ Senha não confere`);
-      return res.status(401).json({ message: 'Credenciais inválidas' });
-    }
-    
+    return res.status(401).json({ message: 'Credenciais inválidas' });
+  }
+  
     // Remover passwordHash da resposta
     const { passwordHash, ...safeUser } = user;
     
     console.log(`[LOGIN] ✅ Login bem-sucedido para ${user.email}`);
-    return res.json({
-      token: 'token-' + user.id,
+  return res.json({
+    token: 'token-' + user.id,
       user: safeUser,
-    });
+  });
   } catch (error) {
     console.error('[LOGIN] ❌ Erro no login:', error);
     if (error instanceof Error) {
@@ -647,10 +647,11 @@ app.put('/api/settings', async (req, res) => {
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`\n🚀 API running on http://localhost:${PORT}`);
+  console.log(`\n🚀 API running on port ${PORT}`);
   console.log(`📊 Modo: ${USE_MOCK ? '🔴 MOCK (dados em memória)' : '🟢 BANCO DE DADOS REAL'}`);
   console.log(`📝 MOCK_DATA env: "${process.env.MOCK_DATA}"`);
   console.log(`🔗 DATABASE_URL configured: ${!!process.env.DATABASE_URL}`);
+  console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL || 'Não configurado'}`);
   console.log(`\n`);
 });
 

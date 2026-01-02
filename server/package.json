@@ -2,11 +2,12 @@
   "name": "stock-manager-api",
   "version": "1.0.0",
   "description": "API backend para Stock Manager",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc",
-    "dev": "ts-node --transpile-only --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" index.ts"
+    "dev": "ts-node --transpile-only --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" index.ts",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "express": "^4.19.2",

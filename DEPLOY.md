@@ -1,5 +1,7 @@
 # Guia de Deploy
 
+> **Para deploy no Render (gratuito)**, veja o arquivo [RENDER_SETUP.md](./RENDER_SETUP.md)
+
 ## Frontend (Vercel)
 
 ### 1. Configuração no Vercel
