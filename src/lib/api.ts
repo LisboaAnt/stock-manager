@@ -37,7 +37,7 @@ export async function apiFetch<T>(path: string, options?: RequestInit): Promise<
     }
     
     // Se o content-type indicar JSON ou se conseguir fazer parse, retornar JSON
-    if (contentType && contentType.includes('application/json')) {
+    if (contentType?.includes('application/json')) {
       try {
         return JSON.parse(text) as T;
       } catch {
