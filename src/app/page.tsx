@@ -61,34 +61,35 @@ export default function Home() {
       {/* Modal de Doação */}
       <dialog
         ref={dialogRef}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-transparent border-0 backdrop:bg-black/50 backdrop:backdrop-blur-sm"
+        className="fixed inset-0 z-50 m-0 p-0 bg-transparent border-0 backdrop:bg-black/50 backdrop:backdrop-blur-sm"
         aria-labelledby="donation-title"
         onCancel={handleClose}
       >
-        <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl relative">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-                <Heart className="w-6 h-6 text-red-600" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl relative z-10">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                  <Heart className="w-6 h-6 text-red-600" />
+                </div>
+                <h3 id="donation-title" className="text-2xl font-bold text-zinc-900">Apoie o Projeto</h3>
               </div>
-              <h3 id="donation-title" className="text-2xl font-bold text-zinc-900">Apoie o Projeto</h3>
+              <button
+                onClick={handleClose}
+                className="text-zinc-400 hover:text-zinc-600 transition-colors p-1 rounded-lg hover:bg-zinc-100"
+                aria-label="Fechar modal"
+              >
+                <X className="w-6 h-6" />
+              </button>
             </div>
-            <button
-              onClick={handleClose}
-              className="text-zinc-400 hover:text-zinc-600 transition-colors"
-              aria-label="Fechar modal"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
-            <p className="text-zinc-700 mb-6">
+            <p className="text-zinc-700 mb-6 leading-relaxed">
               Este sistema é gratuito e de código aberto. Se você gostou e quer apoiar o desenvolvimento, 
               considere fazer uma doação via PIX.
             </p>
             <div className="bg-green-50 rounded-xl p-5 border border-green-200 mb-6">
-            
-              <div className="bg-white rounded-lg p-4 border border-green-200">
-                <p className="text-lg font-mono text-zinc-900 break-all select-all">
+              <p className="text-sm font-medium text-green-900 mb-3">Chave PIX (E-mail):</p>
+              <div className="bg-white rounded-lg p-4 border border-green-200 mb-3">
+                <p className="text-lg font-mono text-zinc-900 break-all select-all text-center">
                   antoniol.carvalho49@gmail.com
                 </p>
               </div>
@@ -97,14 +98,16 @@ export default function Home() {
                   navigator.clipboard.writeText('antoniol.carvalho49@gmail.com');
                   alert('Chave PIX copiada!');
                 }}
-                className="mt-3 w-full px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                className="w-full px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
               >
+                <Mail className="w-4 h-4" />
                 Copiar Chave PIX
               </button>
             </div>
             <p className="text-sm text-zinc-600 text-center">
               Sua contribuição ajuda a manter e melhorar o sistema. Muito obrigado! 🙏
             </p>
+          </div>
         </div>
       </dialog>
 
