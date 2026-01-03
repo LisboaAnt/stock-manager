@@ -89,8 +89,7 @@ export default function LoginPage() {
           </div>
           <form className="flex flex-col gap-4" onSubmit={onSubmit}>
           <label htmlFor="login-email" className="flex flex-col gap-1 text-sm text-zinc-700">
-            Email
-            <input
+            Email<input
               id="login-email"
               className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-zinc-900"
               value={email}

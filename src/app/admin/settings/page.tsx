@@ -34,23 +34,8 @@ export default function SettingsPage() {
   const [error, setError] = useState<string | null>(null);
   
   // Apenas Admin pode configurar sistema (RF34)
-  if (userRole !== 'ADMIN') {
-    return (
-      <div className="space-y-6">
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <h2 className="text-xl font-semibold text-red-900 mb-2">Acesso Negado</h2>
-          <p className="text-red-700">
-            Você não tem permissão para acessar esta página. Apenas Administradores podem configurar o sistema (RF34).
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  useEffect(() => {
-    loadSettings();
-  }, []);
-
+  const isAdmin = userRole === 'ADMIN';
+  
   const loadSettings = async () => {
     try {
       setLoading(true);
@@ -65,6 +50,26 @@ export default function SettingsPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (isAdmin) {
+      loadSettings();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAdmin]);
+
+  if (!isAdmin) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+          <h2 className="text-xl font-semibold text-red-900 mb-2">Acesso Negado</h2>
+          <p className="text-red-700">
+            Você não tem permissão para acessar esta página. Apenas Administradores podem configurar o sistema (RF34).
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const handleSave = async () => {
     setSaving(true);
