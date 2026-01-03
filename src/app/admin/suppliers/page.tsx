@@ -19,10 +19,21 @@ export default function SuppliersPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingSupplier, setEditingSupplier] = useState<Supplier | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    documentId: '',
+    contactEmail: '',
+  });
   
   // Apenas Admin e Gerente podem acessar (RF16)
   const canAccess = userRole === 'ADMIN' || userRole === 'MANAGER';
   
+  useEffect(() => {
+    if (canAccess) {
+      loadSuppliers();
+    }
+  }, [canAccess]);
+
   if (!canAccess) {
     return (
       <div className="space-y-6">
@@ -35,16 +46,6 @@ export default function SuppliersPage() {
       </div>
     );
   }
-
-  const [formData, setFormData] = useState({
-    name: '',
-    documentId: '',
-    contactEmail: '',
-  });
-
-  useEffect(() => {
-    loadSuppliers();
-  }, []);
 
   const loadSuppliers = async () => {
     try {

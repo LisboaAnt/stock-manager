@@ -185,6 +185,80 @@ export default function ProductsPage() {
     return categories.find(c => c.id === categoryId)?.name || 'Sem categoria';
   };
 
+  const renderProductsContent = () => {
+    if (loading) {
+      return <div className="p-8 text-center text-zinc-700">Carregando produtos...</div>;
+    }
+    
+    if (filteredProducts.length === 0) {
+      return (
+        <div className="p-8 text-center text-zinc-700">
+          {searchTerm ? 'Nenhum produto encontrado' : 'Nenhum produto cadastrado'}
+        </div>
+      );
+    }
+    
+    return (
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm">
+          <thead className="bg-zinc-50 border-b">
+            <tr>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Nome</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">SKU</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Categoria</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Preço Venda</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Estoque</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Status</th>
+              {canEdit && (
+                <th className="text-left py-3 px-4 font-medium text-zinc-700">Ações</th>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {filteredProducts.map((product) => (
+              <tr key={product.id} className="border-b last:border-0 hover:bg-zinc-50">
+                <td className="py-3 px-4 text-zinc-900 font-medium">{product.name}</td>
+                <td className="py-3 px-4 text-zinc-600">{product.sku}</td>
+                <td className="py-3 px-4 text-zinc-600">{getCategoryName(product.categoryId)}</td>
+                <td className="py-3 px-4 text-zinc-900">R$ {product.priceSale.toFixed(2)}</td>
+                <td className="py-3 px-4 text-zinc-900">{product.stockQuantity}</td>
+                <td className="py-3 px-4">
+                  {settings.minStockAlert && product.stockQuantity < product.minStock ? (
+                    <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                      Abaixo do mínimo
+                    </span>
+                  ) : (
+                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                      OK
+                    </span>
+                  )}
+                </td>
+                {canEdit && (
+                  <td className="py-3 px-4">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(product)}
+                        className="text-blue-600 hover:text-blue-700 text-xs font-medium"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        onClick={() => handleDelete(product)}
+                        className="text-red-600 hover:text-red-700 text-xs font-medium"
+                      >
+                        Inativar
+                      </button>
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
         <div className="flex items-center justify-between">
@@ -397,71 +471,7 @@ export default function ProductsPage() {
                 </select>
               </div>
             </div>
-          {loading ? (
-            <div className="p-8 text-center text-zinc-700">Carregando produtos...</div>
-          ) : filteredProducts.length === 0 ? (
-            <div className="p-8 text-center text-zinc-700">
-              {searchTerm ? 'Nenhum produto encontrado' : 'Nenhum produto cadastrado'}
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-sm">
-                <thead className="bg-zinc-50 border-b">
-                  <tr>
-                    <th className="text-left py-3 px-4 font-medium text-zinc-700">Nome</th>
-                    <th className="text-left py-3 px-4 font-medium text-zinc-700">SKU</th>
-                    <th className="text-left py-3 px-4 font-medium text-zinc-700">Categoria</th>
-                    <th className="text-left py-3 px-4 font-medium text-zinc-700">Preço Venda</th>
-                    <th className="text-left py-3 px-4 font-medium text-zinc-700">Estoque</th>
-                    <th className="text-left py-3 px-4 font-medium text-zinc-700">Status</th>
-                    {canEdit && (
-                      <th className="text-left py-3 px-4 font-medium text-zinc-700">Ações</th>
-                    )}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredProducts.map((product) => (
-                    <tr key={product.id} className="border-b last:border-0 hover:bg-zinc-50">
-                      <td className="py-3 px-4 text-zinc-900 font-medium">{product.name}</td>
-                      <td className="py-3 px-4 text-zinc-600">{product.sku}</td>
-                      <td className="py-3 px-4 text-zinc-600">{getCategoryName(product.categoryId)}</td>
-                      <td className="py-3 px-4 text-zinc-900">R$ {product.priceSale.toFixed(2)}</td>
-                      <td className="py-3 px-4 text-zinc-900">{product.stockQuantity}</td>
-                      <td className="py-3 px-4">
-                        {settings.minStockAlert && product.stockQuantity < product.minStock ? (
-                          <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
-                            Abaixo do mínimo
-                          </span>
-                        ) : (
-                          <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                            OK
-                          </span>
-                        )}
-                      </td>
-                      {canEdit && (
-                        <td className="py-3 px-4">
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleEdit(product)}
-                              className="text-blue-600 hover:text-blue-700 text-xs font-medium"
-                            >
-                              Editar
-                            </button>
-                            <button
-                              onClick={() => handleDelete(product)}
-                              className="text-red-600 hover:text-red-700 text-xs font-medium"
-                            >
-                              Inativar
-                            </button>
-                          </div>
-                        </td>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          {renderProductsContent()}
         </div>
 
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">

@@ -62,23 +62,6 @@ export default function ReportsPage() {
   // Apenas Admin e Gerente podem acessar relatórios financeiros (RF13, RF14)
   const canAccess = userRole === 'ADMIN' || userRole === 'MANAGER';
   
-  if (!canAccess) {
-    return (
-      <div className="space-y-6">
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <h2 className="text-xl font-semibold text-red-900 mb-2">Acesso Negado</h2>
-          <p className="text-red-700">
-            Você não tem permissão para acessar esta página. Apenas Administradores e Gerentes podem visualizar relatórios financeiros (RF13, RF14).
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  useEffect(() => {
-    loadReports();
-  }, []);
-
   const loadReports = async () => {
     try {
       setLoading(true);
@@ -104,6 +87,26 @@ export default function ReportsPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (canAccess) {
+      loadReports();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canAccess]);
+
+  if (!canAccess) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+          <h2 className="text-xl font-semibold text-red-900 mb-2">Acesso Negado</h2>
+          <p className="text-red-700">
+            Você não tem permissão para acessar esta página. Apenas Administradores e Gerentes podem visualizar relatórios financeiros (RF13, RF14).
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // Funções auxiliares para reduzir complexidade cognitiva
   const getStockStatus = (belowMin: boolean | undefined): string => {
