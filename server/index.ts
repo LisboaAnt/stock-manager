@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import { login, users, categories, suppliers, products, movements } from './mock';
 import { StockMovement, Product } from './types';
@@ -427,64 +427,98 @@ app.get('/api/movements', async (_req, res) => {
   }
 });
 
+// Funções auxiliares para reduzir complexidade cognitiva
+function validateMovementData(data: Partial<Omit<StockMovement, 'id' | 'createdAt'>>): string | null {
+  if (!data.productId || !data.userId || !data.type || !data.quantity) {
+    return 'Dados inválidos: productId, userId, type e quantity são obrigatórios';
+  }
+  return null;
+}
+
+function validateStockAvailability(productId: string, quantity: number): { valid: boolean; message?: string } {
+  const product = products.find((p) => p.id === productId);
+  if (!product) {
+    return { valid: false, message: 'Produto não encontrado' };
+  }
+  if (quantity > product.stockQuantity) {
+    return { 
+      valid: false, 
+      message: `Estoque insuficiente! Disponível: ${product.stockQuantity} unidades (RF25)` 
+    };
+  }
+  return { valid: true };
+}
+
+function createMockMovement(data: Omit<StockMovement, 'id' | 'createdAt'>): StockMovement {
+  const move: StockMovement = {
+    id: randomUUID(),
+    ...data,
+    createdAt: new Date().toISOString(),
+  };
+  movements.push(move);
+  return move;
+}
+
+function updateProductStock(productId: string, type: string, quantity: number): void {
+  const product = products.find((p) => p.id === productId);
+  if (!product) return;
+  
+  if (type === 'ENTRY') {
+    product.stockQuantity += quantity;
+  } else if (type === 'EXIT') {
+    product.stockQuantity -= quantity;
+  } else if (type === 'ADJUSTMENT') {
+    product.stockQuantity = quantity;
+  }
+}
+
+async function handleMockMovement(data: Omit<StockMovement, 'id' | 'createdAt'>): Promise<{ status: number; body: StockMovement | { message: string } }> {
+  if (data.type === 'EXIT') {
+    const validation = validateStockAvailability(data.productId, data.quantity);
+    if (!validation.valid) {
+      return { 
+        status: validation.message === 'Produto não encontrado' ? 404 : 400, 
+        body: { message: validation.message || 'Erro de validação' } 
+      };
+    }
+  }
+  
+  const move = createMockMovement(data);
+  updateProductStock(data.productId, data.type, data.quantity);
+  return { status: 201, body: move };
+}
+
+async function handleDatabaseMovement(data: Omit<StockMovement, 'id' | 'createdAt'>): Promise<{ status: number; body: StockMovement | { message: string } }> {
+  try {
+    const move = await createMovement(data);
+    console.log('[MOVEMENT] ✅ Movimentação criada com sucesso:', move.id);
+    return { status: 201, body: move };
+  } catch (error) {
+    console.error('[MOVEMENT] ❌ Erro ao criar movimentação:', error);
+    if (error instanceof Error) {
+      return { status: 400, body: { message: error.message } };
+    }
+    return { status: 500, body: { message: 'Erro ao criar movimentação' } };
+  }
+}
+
 app.post('/api/movements', async (req, res) => {
   const { productId, userId, type, reason, quantity, unitPrice, notes } = req.body as Omit<StockMovement, 'id' | 'createdAt'>;
   
   console.log('[MOVEMENT] Dados recebidos:', { productId, userId, type, reason, quantity });
   
-  // Validação básica
-  if (!productId || !userId || !type || !quantity) {
+  const validationError = validateMovementData({ productId, userId, type, quantity });
+  if (validationError) {
     console.log('[MOVEMENT] ❌ Dados inválidos');
-    return res.status(400).json({ message: 'Dados inválidos: productId, userId, type e quantity são obrigatórios' });
+    return res.status(400).json({ message: validationError });
   }
   
-  if (USE_MOCK) {
-    // Validação RF25: Bloquear saída se estoque insuficiente
-    if (type === 'EXIT') {
-      const product = products.find((p) => p.id === productId);
-      if (!product) {
-        return res.status(404).json({ message: 'Produto não encontrado' });
-      }
-      if (quantity > product.stockQuantity) {
-        return res.status(400).json({ 
-          message: `Estoque insuficiente! Disponível: ${product.stockQuantity} unidades (RF25)` 
-        });
-      }
-    }
-    
-    const move: StockMovement = {
-      id: randomUUID(),
-      productId,
-      userId,
-      type,
-      reason,
-      quantity,
-      unitPrice,
-      notes,
-      createdAt: new Date().toISOString(),
-    };
-    movements.push(move);
-    // update stock
-    const product = products.find((p) => p.id === productId);
-    if (product) {
-      if (type === 'ENTRY') product.stockQuantity += quantity;
-      if (type === 'EXIT') product.stockQuantity -= quantity;
-      if (type === 'ADJUSTMENT') product.stockQuantity = quantity;
-    }
-    return res.status(201).json(move);
-  }
+  const movementData = { productId, userId, type, reason, quantity, unitPrice, notes };
+  const result = USE_MOCK 
+    ? await handleMockMovement(movementData)
+    : await handleDatabaseMovement(movementData);
   
-  try {
-    const move = await createMovement({ productId, userId, type, reason, quantity, unitPrice, notes });
-    console.log('[MOVEMENT] ✅ Movimentação criada com sucesso:', move.id);
-    res.status(201).json(move);
-  } catch (error) {
-    console.error('[MOVEMENT] ❌ Erro ao criar movimentação:', error);
-    if (error instanceof Error) {
-      return res.status(400).json({ message: error.message });
-    }
-    res.status(500).json({ message: 'Erro ao criar movimentação' });
-  }
+  return res.status(result.status).json(result.body);
 });
 
 // Reports
@@ -584,9 +618,8 @@ app.get('/api/reports/sales/detailed', async (_req, res) => {
       }, new Map())
     ).map(([_, v]) => v).sort((a, b) => b.date.localeCompare(a.date));
 
-    const topProducts = salesByProduct
-      .sort((a, b) => b.totalQuantity - a.totalQuantity)
-      .slice(0, 10);
+    const sortedProducts = salesByProduct.sort((a, b) => b.totalQuantity - a.totalQuantity);
+    const topProducts = sortedProducts.slice(0, 10);
 
     return res.json({
       salesByProduct,

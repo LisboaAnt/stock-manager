@@ -64,9 +64,11 @@ export default function Home() {
           <div 
             className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl" 
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby="donation-title"
+            tabIndex={0}
           >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">

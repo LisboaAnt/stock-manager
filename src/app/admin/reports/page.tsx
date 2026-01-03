@@ -105,154 +105,192 @@ export default function ReportsPage() {
     }
   };
 
+  // Funções auxiliares para reduzir complexidade cognitiva
+  const getStockStatus = (belowMin: boolean | undefined): string => {
+    return belowMin ? 'Abaixo do Mínimo' : 'OK';
+  };
+
+  const getStockTableData = () => {
+    return stockReport.map(p => [
+      p.name,
+      p.sku,
+      p.stockQuantity.toString(),
+      p.minStock.toString(),
+      getStockStatus(p.belowMin)
+    ]);
+  };
+
+  const downloadBlob = (blob: Blob, filename: string): void => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportToCSV = (date: string): void => {
+    const headers = ['Produto', 'SKU', 'Estoque Atual', 'Estoque Mínimo', 'Status'];
+    const rows = getStockTableData();
+    const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    downloadBlob(blob, `relatorio-estoque-${date}.csv`);
+  };
+
+  const exportToJSON = (date: string): void => {
+    const json = JSON.stringify(
+      { stock: stockReport, sales: salesReport, detailedSales: detailedSalesReport },
+      null,
+      2
+    );
+    const blob = new Blob([json], { type: 'application/json' });
+    downloadBlob(blob, `relatorio-${date}.json`);
+  };
+
+  const createExcelStockSheet = () => {
+    const stockData = [
+      ['Produto', 'SKU', 'Estoque Atual', 'Estoque Mínimo', 'Status'],
+      ...stockReport.map(p => [
+        p.name,
+        p.sku,
+        p.stockQuantity,
+        p.minStock,
+        getStockStatus(p.belowMin)
+      ])
+    ];
+    return XLSX.utils.aoa_to_sheet(stockData);
+  };
+
+  const createExcelSalesSheet = () => {
+    if (!salesReport) return null;
+    const salesData = [
+      ['Métrica', 'Valor'],
+      ['Total de Vendas', salesReport.totalSales],
+      ['Itens Vendidos', salesReport.totalItems]
+    ];
+    return XLSX.utils.aoa_to_sheet(salesData);
+  };
+
+  const createExcelDetailedSalesSheet = () => {
+    if (!isAdmin || !detailedSalesReport) return null;
+    const detailedData = [
+      ['Produto', 'SKU', 'Quantidade Total', 'Receita Total', 'Número de Vendas'],
+      ...detailedSalesReport.salesByProduct.map(s => [
+        s.productName,
+        s.sku,
+        s.totalQuantity,
+        s.totalRevenue,
+        s.saleCount
+      ])
+    ];
+    return XLSX.utils.aoa_to_sheet(detailedData);
+  };
+
+  const exportToExcel = (date: string): void => {
+    const wb = XLSX.utils.book_new();
+    const wsStock = createExcelStockSheet();
+    XLSX.utils.book_append_sheet(wb, wsStock, 'Estoque');
+    
+    const wsSales = createExcelSalesSheet();
+    if (wsSales) {
+      XLSX.utils.book_append_sheet(wb, wsSales, 'Vendas');
+    }
+    
+    const wsDetailed = createExcelDetailedSalesSheet();
+    if (wsDetailed) {
+      XLSX.utils.book_append_sheet(wb, wsDetailed, 'Vendas por Produto');
+    }
+    
+    XLSX.writeFile(wb, `relatorio-${date}.xlsx`);
+  };
+
+  const addPDFStockTable = (doc: jsPDF): number => {
+    const tableData = getStockTableData();
+    autoTable(doc, {
+      head: [['Produto', 'SKU', 'Estoque Atual', 'Estoque Mínimo', 'Status']],
+      body: tableData,
+      startY: 40,
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [59, 130, 246] }
+    });
+    const lastAutoTable = (doc as any).lastAutoTable;
+    return lastAutoTable ? lastAutoTable.finalY + 15 : 60;
+  };
+
+  const addPDFSalesSummary = (doc: jsPDF, startY: number): number => {
+    if (!salesReport) return startY;
+    let finalY = startY;
+    doc.setFontSize(14);
+    doc.text('Resumo de Vendas', 14, finalY);
+    finalY += 10;
+    doc.setFontSize(10);
+    doc.text(`Total de Vendas: R$ ${salesReport.totalSales.toFixed(2)}`, 14, finalY);
+    finalY += 7;
+    doc.text(`Itens Vendidos: ${salesReport.totalItems}`, 14, finalY);
+    return finalY + 10;
+  };
+
+  const addPDFDetailedSales = (doc: jsPDF, startY: number): void => {
+    if (!isAdmin || !detailedSalesReport) return;
+    let finalY = startY;
+    if (salesReport) finalY += 20;
+    
+    doc.setFontSize(14);
+    doc.text('Vendas por Produto', 14, finalY);
+    finalY += 10;
+    
+    const salesTableData = detailedSalesReport.salesByProduct.slice(0, 20).map(s => [
+      s.productName,
+      s.sku,
+      s.totalQuantity.toString(),
+      `R$ ${s.totalRevenue.toFixed(2)}`,
+      s.saleCount.toString()
+    ]);
+    
+    autoTable(doc, {
+      head: [['Produto', 'SKU', 'Quantidade', 'Receita', 'Vendas']],
+      body: salesTableData,
+      startY: finalY,
+      styles: { fontSize: 7 },
+      headStyles: { fillColor: [34, 197, 94] }
+    });
+  };
+
+  const exportToPDF = (date: string): void => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text('Relatório de Estoque', 14, 20);
+    doc.setFontSize(12);
+    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 14, 30);
+    
+    const stockTableEndY = addPDFStockTable(doc);
+    const salesSummaryEndY = addPDFSalesSummary(doc, stockTableEndY);
+    addPDFDetailedSales(doc, salesSummaryEndY);
+    
+    doc.save(`relatorio-${date}.pdf`);
+  };
+
   // SOL-001: Exportação em múltiplos formatos (CSV, PDF, Excel) - apenas para ADMIN
   const handleExport = () => {
     const date = new Date().toISOString().split('T')[0];
     
-    if (exportFormat === 'CSV') {
-      const headers = ['Produto', 'SKU', 'Estoque Atual', 'Estoque Mínimo', 'Status'];
-      const rows = stockReport.map(p => [
-        p.name,
-        p.sku,
-        p.stockQuantity.toString(),
-        p.minStock.toString(),
-        p.belowMin ? 'Abaixo do Mínimo' : 'OK'
-      ]);
-      const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `relatorio-estoque-${date}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } else if (exportFormat === 'JSON') {
-      const json = JSON.stringify({ stock: stockReport, sales: salesReport, detailedSales: detailedSalesReport }, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `relatorio-${date}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } else if (exportFormat === 'EXCEL') {
-      // Criar workbook
-      const wb = XLSX.utils.book_new();
-      
-      // Planilha de Estoque
-      const stockData = [
-        ['Produto', 'SKU', 'Estoque Atual', 'Estoque Mínimo', 'Status'],
-        ...stockReport.map(p => [
-          p.name,
-          p.sku,
-          p.stockQuantity,
-          p.minStock,
-          p.belowMin ? 'Abaixo do Mínimo' : 'OK'
-        ])
-      ];
-      const wsStock = XLSX.utils.aoa_to_sheet(stockData);
-      XLSX.utils.book_append_sheet(wb, wsStock, 'Estoque');
-      
-      // Planilha de Vendas (se disponível)
-      if (salesReport) {
-        const salesData = [
-          ['Métrica', 'Valor'],
-          ['Total de Vendas', salesReport.totalSales],
-          ['Itens Vendidos', salesReport.totalItems]
-        ];
-        const wsSales = XLSX.utils.aoa_to_sheet(salesData);
-        XLSX.utils.book_append_sheet(wb, wsSales, 'Vendas');
-      }
-      
-      // Planilha de Vendas Detalhadas (apenas ADMIN)
-      if (isAdmin && detailedSalesReport) {
-        const detailedData = [
-          ['Produto', 'SKU', 'Quantidade Total', 'Receita Total', 'Número de Vendas'],
-          ...detailedSalesReport.salesByProduct.map(s => [
-            s.productName,
-            s.sku,
-            s.totalQuantity,
-            s.totalRevenue,
-            s.saleCount
-          ])
-        ];
-        const wsDetailed = XLSX.utils.aoa_to_sheet(detailedData);
-        XLSX.utils.book_append_sheet(wb, wsDetailed, 'Vendas por Produto');
-      }
-      
-      XLSX.writeFile(wb, `relatorio-${date}.xlsx`);
-    } else if (exportFormat === 'PDF') {
-      const doc = new jsPDF();
-      
-      // Título
-      doc.setFontSize(18);
-      doc.text('Relatório de Estoque', 14, 20);
-      doc.setFontSize(12);
-      doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 14, 30);
-      
-      // Tabela de Estoque
-      const tableData = stockReport.map(p => [
-        p.name,
-        p.sku,
-        p.stockQuantity.toString(),
-        p.minStock.toString(),
-        p.belowMin ? 'Abaixo do Mínimo' : 'OK'
-      ]);
-      
-      autoTable(doc, {
-        head: [['Produto', 'SKU', 'Estoque Atual', 'Estoque Mínimo', 'Status']],
-        body: tableData,
-        startY: 40,
-        styles: { fontSize: 8 },
-        headStyles: { fillColor: [59, 130, 246] }
-      });
-      
-      // Adicionar informações de vendas se disponível
-      if (salesReport) {
-        const lastAutoTable = (doc as any).lastAutoTable;
-        let finalY = lastAutoTable ? lastAutoTable.finalY + 15 : 60;
-        doc.setFontSize(14);
-        doc.text('Resumo de Vendas', 14, finalY);
-        finalY += 10;
-        doc.setFontSize(10);
-        doc.text(`Total de Vendas: R$ ${salesReport.totalSales.toFixed(2)}`, 14, finalY);
-        finalY += 7;
-        doc.text(`Itens Vendidos: ${salesReport.totalItems}`, 14, finalY);
-      }
-      
-      // Adicionar relatórios detalhados de vendas (apenas ADMIN)
-      if (isAdmin && detailedSalesReport) {
-        const lastAutoTable = (doc as any).lastAutoTable;
-        let finalY = lastAutoTable ? lastAutoTable.finalY + 15 : 60;
-        if (salesReport) finalY += 20;
-        
-        doc.setFontSize(14);
-        doc.text('Vendas por Produto', 14, finalY);
-        finalY += 10;
-        
-        const salesTableData = detailedSalesReport.salesByProduct.slice(0, 20).map(s => [
-          s.productName,
-          s.sku,
-          s.totalQuantity.toString(),
-          `R$ ${s.totalRevenue.toFixed(2)}`,
-          s.saleCount.toString()
-        ]);
-        
-        autoTable(doc, {
-          head: [['Produto', 'SKU', 'Quantidade', 'Receita', 'Vendas']],
-          body: salesTableData,
-          startY: finalY,
-          styles: { fontSize: 7 },
-          headStyles: { fillColor: [34, 197, 94] }
-        });
-      }
-      
-      doc.save(`relatorio-${date}.pdf`);
+    switch (exportFormat) {
+      case 'CSV':
+        exportToCSV(date);
+        break;
+      case 'JSON':
+        exportToJSON(date);
+        break;
+      case 'EXCEL':
+        exportToExcel(date);
+        break;
+      case 'PDF':
+        exportToPDF(date);
+        break;
     }
   };
 
   const lowStockProducts = settings.minStockAlert ? stockReport.filter(p => p.belowMin) : [];
-  const totalStockValue = stockReport.reduce((sum, p) => sum + (p.stockQuantity * (p.priceCost || 0)), 0);
 
   return (
     <div className="space-y-6">
@@ -338,8 +376,8 @@ export default function ReportsPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {detailedSalesReport.topProducts.map((product, idx) => (
-                          <tr key={idx} className="border-b last:border-0 text-zinc-900">
+                        {detailedSalesReport.topProducts.map((product) => (
+                          <tr key={product.sku} className="border-b last:border-0 text-zinc-900">
                             <td className="py-2 text-zinc-900">{product.productName}</td>
                             <td className="py-2 text-zinc-900">{product.sku}</td>
                             <td className="py-2 text-right text-zinc-900">{product.totalQuantity}</td>
@@ -366,8 +404,8 @@ export default function ReportsPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {detailedSalesReport.salesByProduct.map((sale, idx) => (
-                          <tr key={idx} className="border-b last:border-0 text-zinc-900">
+                        {detailedSalesReport.salesByProduct.map((sale) => (
+                          <tr key={sale.productId} className="border-b last:border-0 text-zinc-900">
                             <td className="py-2 text-zinc-900">{sale.productName}</td>
                             <td className="py-2 text-zinc-900">{sale.sku}</td>
                             <td className="py-2 text-right text-zinc-900">{sale.totalQuantity}</td>
@@ -394,8 +432,8 @@ export default function ReportsPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {detailedSalesReport.salesByPeriod.map((period, idx) => (
-                          <tr key={idx} className="border-b last:border-0 text-zinc-900">
+                        {detailedSalesReport.salesByPeriod.map((period) => (
+                          <tr key={period.date} className="border-b last:border-0 text-zinc-900">
                             <td className="py-2 text-zinc-900">
                               {new Date(period.date).toLocaleDateString('pt-BR')}
                             </td>
