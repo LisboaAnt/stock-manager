@@ -96,7 +96,7 @@ export default function MovementsPage() {
         type: activeTab,
         quantity: Number.parseInt(formData.quantity),
         reason: activeTab === 'EXIT' ? formData.reason : undefined,
-        unitPrice: 0, // TODO: Calcular baseado no produto
+        unitPrice: 0, 
         notes: formData.notes,
       };
 

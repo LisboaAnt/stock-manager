@@ -29,7 +29,7 @@ export default function LoginPage() {
       });
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      window.location.href = '/admin/dashboard';
+      globalThis.location.href = '/admin/dashboard';
     } catch (err: any) {
       console.error('Erro no login:', err);
       // Tentar extrair mensagem de erro mais específica

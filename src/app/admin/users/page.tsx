@@ -94,7 +94,6 @@ export default function UsersPage() {
 
   const handleToggleActive = async (user: User) => {
     try {
-      // TODO: Implementar chamada à API
       setUsers(users.map(u => 
         u.id === user.id ? { ...u, isActive: !u.isActive } : u
       ));
@@ -107,6 +106,76 @@ export default function UsersPage() {
     setShowForm(false);
     setEditingUser(null);
     setFormData({ email: '', name: '', role: 'OPERATOR', isActive: true });
+  };
+
+  const renderUsersContent = () => {
+    if (loading) {
+      return <div className="p-8 text-center text-zinc-700">Carregando usuários...</div>;
+    }
+    
+    if (users.length === 0) {
+      return <div className="p-8 text-center text-zinc-700">Nenhum usuário cadastrado</div>;
+    }
+    
+    return (
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm">
+          <thead className="bg-zinc-50 border-b">
+            <tr>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Nome</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Email</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Perfil</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Status</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id} className="border-b last:border-0 hover:bg-zinc-50">
+                <td className="py-3 px-4 text-zinc-900">{user.name}</td>
+                <td className="py-3 px-4 text-zinc-600">{user.email}</td>
+                <td className="py-3 px-4">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${roleColors[user.role]}`}>
+                    {roleLabels[user.role]}
+                  </span>
+                </td>
+                <td className="py-3 px-4">
+                  {user.isActive ? (
+                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                      Ativo
+                    </span>
+                  ) : (
+                    <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                      Inativo
+                    </span>
+                  )}
+                </td>
+                <td className="py-3 px-4">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEdit(user)}
+                      className="text-blue-600 hover:text-blue-700 text-xs font-medium"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleToggleActive(user)}
+                      className={`text-xs font-medium ${
+                        user.isActive
+                          ? 'text-orange-600 hover:text-orange-700'
+                          : 'text-green-600 hover:text-green-700'
+                      }`}
+                    >
+                      {user.isActive ? 'Desativar' : 'Ativar'}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
   };
 
   return (
@@ -216,69 +285,7 @@ export default function UsersPage() {
         <div className="p-4 border-b">
           <h3 className="text-lg font-semibold text-zinc-900">Lista de Usuários</h3>
         </div>
-        {loading ? (
-          <div className="p-8 text-center text-zinc-700">Carregando usuários...</div>
-        ) : users.length === 0 ? (
-          <div className="p-8 text-center text-zinc-700">Nenhum usuário cadastrado</div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead className="bg-zinc-50 border-b">
-                <tr>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Nome</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Email</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Perfil</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Status</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user.id} className="border-b last:border-0 hover:bg-zinc-50">
-                    <td className="py-3 px-4 text-zinc-900">{user.name}</td>
-                    <td className="py-3 px-4 text-zinc-600">{user.email}</td>
-                    <td className="py-3 px-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${roleColors[user.role]}`}>
-                        {roleLabels[user.role]}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4">
-                      {user.isActive ? (
-                        <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                          Ativo
-                        </span>
-                      ) : (
-                        <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
-                          Inativo
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleEdit(user)}
-                          className="text-blue-600 hover:text-blue-700 text-xs font-medium"
-                        >
-                          Editar
-                        </button>
-                        <button
-                          onClick={() => handleToggleActive(user)}
-                          className={`text-xs font-medium ${
-                            user.isActive
-                              ? 'text-orange-600 hover:text-orange-700'
-                              : 'text-green-600 hover:text-green-700'
-                          }`}
-                        >
-                          {user.isActive ? 'Desativar' : 'Ativar'}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        {renderUsersContent()}
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">

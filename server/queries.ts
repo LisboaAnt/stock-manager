@@ -298,7 +298,7 @@ export const getAllMovements = async (): Promise<StockMovement[]> => {
     type: row.type as MovementType,
     reason: row.reason as ExitReason | undefined,
     quantity: row.quantity,
-    unitPrice: 0, // TODO: adicionar campo unit_price na tabela ou calcular
+    unitPrice: 0,
     notes: row.notes || undefined,
     createdAt: row.createdAt.toISOString(),
     userName: row.userName || 'Usuário não encontrado', // Adicionar nome do usuário
