@@ -61,11 +61,11 @@ export default function Home() {
       {/* Modal de Doação */}
       <dialog
         ref={dialogRef}
-        className="bg-transparent border-0 p-0 backdrop:bg-black/50 backdrop:backdrop-blur-sm max-w-md w-full rounded-2xl"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-transparent border-0 backdrop:bg-black/50 backdrop:backdrop-blur-sm"
         aria-labelledby="donation-title"
         onCancel={handleClose}
       >
-        <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+        <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl relative">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
