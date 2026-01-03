@@ -68,7 +68,6 @@ export default function Home() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="donation-title"
-            tabIndex={0}
           >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">

@@ -1,5 +1,4 @@
 import pool from './db';
-import bcrypt from 'bcryptjs';
 import { config } from 'dotenv';
 
 config();
@@ -94,47 +93,47 @@ async function createSuppliers(): Promise<{ [key: string]: string }> {
 function getProductsData() {
   return [
       // Papelaria
-      { name: 'Caneta Bic Azul', sku: 'BIC-AZ-001', category: 'Papelaria', supplier: 'Bic Brasil', priceCost: 1.50, priceSale: 2.50, minStock: 50, stock: 120 },
-      { name: 'Caneta Bic Preta', sku: 'BIC-PT-001', category: 'Papelaria', supplier: 'Bic Brasil', priceCost: 1.50, priceSale: 2.50, minStock: 50, stock: 100 },
-      { name: 'Caneta Bic Vermelha', sku: 'BIC-VM-001', category: 'Papelaria', supplier: 'Bic Brasil', priceCost: 1.50, priceSale: 2.50, minStock: 30, stock: 80 },
-      { name: 'Lápis HB Faber-Castell', sku: 'FC-LAP-HB', category: 'Material Escolar', supplier: 'Faber-Castell', priceCost: 0.80, priceSale: 1.50, minStock: 100, stock: 250 },
-      { name: 'Borracha Branca', sku: 'BOR-001', category: 'Papelaria', supplier: 'Distribuidora Central', priceCost: 0.50, priceSale: 1.00, minStock: 50, stock: 150 },
-      { name: 'Caderno 10 Matérias', sku: 'CAD-10M', category: 'Material Escolar', supplier: 'Distribuidora Central', priceCost: 8.00, priceSale: 15.00, minStock: 20, stock: 45 },
-      { name: 'Régua 30cm', sku: 'REG-30', category: 'Material Escolar', supplier: 'Distribuidora Central', priceCost: 2.00, priceSale: 4.00, minStock: 30, stock: 60 },
+      { name: 'Caneta Bic Azul', sku: 'BIC-AZ-001', category: 'Papelaria', supplier: 'Bic Brasil', priceCost: 1.5, priceSale: 2.5, minStock: 50, stock: 120 },
+      { name: 'Caneta Bic Preta', sku: 'BIC-PT-001', category: 'Papelaria', supplier: 'Bic Brasil', priceCost: 1.5, priceSale: 2.5, minStock: 50, stock: 100 },
+      { name: 'Caneta Bic Vermelha', sku: 'BIC-VM-001', category: 'Papelaria', supplier: 'Bic Brasil', priceCost: 1.5, priceSale: 2.5, minStock: 30, stock: 80 },
+      { name: 'Lápis HB Faber-Castell', sku: 'FC-LAP-HB', category: 'Material Escolar', supplier: 'Faber-Castell', priceCost: 0.8, priceSale: 1.5, minStock: 100, stock: 250 },
+      { name: 'Borracha Branca', sku: 'BOR-001', category: 'Papelaria', supplier: 'Distribuidora Central', priceCost: 0.5, priceSale: 1, minStock: 50, stock: 150 },
+      { name: 'Caderno 10 Matérias', sku: 'CAD-10M', category: 'Material Escolar', supplier: 'Distribuidora Central', priceCost: 8, priceSale: 15, minStock: 20, stock: 45 },
+      { name: 'Régua 30cm', sku: 'REG-30', category: 'Material Escolar', supplier: 'Distribuidora Central', priceCost: 2, priceSale: 4, minStock: 30, stock: 60 },
       { name: 'Apontador', sku: 'APO-001', category: 'Papelaria', supplier: 'Distribuidora Central', priceCost: 1.20, priceSale: 2.50, minStock: 40, stock: 90 },
       
       // Alimentos
-      { name: 'Arroz 5kg Tio João', sku: 'ARZ-5KG', category: 'Alimentos', supplier: 'Nestlé Brasil', priceCost: 18.00, priceSale: 26.00, minStock: 30, stock: 80 },
-      { name: 'Feijão 1kg Carioca', sku: 'FEI-1KG', category: 'Alimentos', supplier: 'Nestlé Brasil', priceCost: 6.50, priceSale: 9.50, minStock: 40, stock: 100 },
-      { name: 'Açúcar 1kg Cristal', sku: 'ACU-1KG', category: 'Alimentos', supplier: 'Nestlé Brasil', priceCost: 3.50, priceSale: 5.50, minStock: 50, stock: 120 },
-      { name: 'Óleo de Soja 900ml', sku: 'OLE-900', category: 'Alimentos', supplier: 'Nestlé Brasil', priceCost: 4.00, priceSale: 6.50, minStock: 40, stock: 90 },
-      { name: 'Macarrão Espaguete 500g', sku: 'MAC-500', category: 'Alimentos', supplier: 'Nestlé Brasil', priceCost: 2.50, priceSale: 4.00, minStock: 50, stock: 110 },
-      { name: 'Leite Integral 1L', sku: 'LEI-1L', category: 'Alimentos', supplier: 'Nestlé Brasil', priceCost: 3.80, priceSale: 5.50, minStock: 60, stock: 150 },
+      { name: 'Arroz 5kg Tio João', sku: 'ARZ-5KG', category: 'Alimentos', supplier: 'Nestlé Brasil', priceCost: 18, priceSale: 26, minStock: 30, stock: 80 },
+      { name: 'Feijão 1kg Carioca', sku: 'FEI-1KG', category: 'Alimentos', supplier: 'Nestlé Brasil', priceCost: 6.5, priceSale: 9.5, minStock: 40, stock: 100 },
+      { name: 'Açúcar 1kg Cristal', sku: 'ACU-1KG', category: 'Alimentos', supplier: 'Nestlé Brasil', priceCost: 3.5, priceSale: 5.5, minStock: 50, stock: 120 },
+      { name: 'Óleo de Soja 900ml', sku: 'OLE-900', category: 'Alimentos', supplier: 'Nestlé Brasil', priceCost: 4, priceSale: 6.5, minStock: 40, stock: 90 },
+      { name: 'Macarrão Espaguete 500g', sku: 'MAC-500', category: 'Alimentos', supplier: 'Nestlé Brasil', priceCost: 2.5, priceSale: 4, minStock: 50, stock: 110 },
+      { name: 'Leite Integral 1L', sku: 'LEI-1L', category: 'Alimentos', supplier: 'Nestlé Brasil', priceCost: 3.8, priceSale: 5.5, minStock: 60, stock: 150 },
       
       // Bebidas
-      { name: 'Coca-Cola 2L', sku: 'COC-2L', category: 'Bebidas', supplier: 'Coca-Cola Andina', priceCost: 5.00, priceSale: 7.50, minStock: 40, stock: 100 },
-      { name: 'Coca-Cola 350ml', sku: 'COC-350', category: 'Bebidas', supplier: 'Coca-Cola Andina', priceCost: 1.80, priceSale: 3.00, minStock: 100, stock: 250 },
-      { name: 'Guaraná Antarctica 2L', sku: 'GUA-2L', category: 'Bebidas', supplier: 'Coca-Cola Andina', priceCost: 4.50, priceSale: 6.50, minStock: 30, stock: 80 },
-      { name: 'Água Mineral 500ml', sku: 'AGU-500', category: 'Bebidas', supplier: 'Distribuidora Central', priceCost: 0.80, priceSale: 1.50, minStock: 100, stock: 300 },
-      { name: 'Suco de Laranja 1L', sku: 'SUC-LAR-1L', category: 'Bebidas', supplier: 'Distribuidora Central', priceCost: 3.50, priceSale: 5.50, minStock: 40, stock: 90 },
+      { name: 'Coca-Cola 2L', sku: 'COC-2L', category: 'Bebidas', supplier: 'Coca-Cola Andina', priceCost: 5, priceSale: 7.5, minStock: 40, stock: 100 },
+      { name: 'Coca-Cola 350ml', sku: 'COC-350', category: 'Bebidas', supplier: 'Coca-Cola Andina', priceCost: 1.8, priceSale: 3, minStock: 100, stock: 250 },
+      { name: 'Guaraná Antarctica 2L', sku: 'GUA-2L', category: 'Bebidas', supplier: 'Coca-Cola Andina', priceCost: 4.5, priceSale: 6.5, minStock: 30, stock: 80 },
+      { name: 'Água Mineral 500ml', sku: 'AGU-500', category: 'Bebidas', supplier: 'Distribuidora Central', priceCost: 0.8, priceSale: 1.5, minStock: 100, stock: 300 },
+      { name: 'Suco de Laranja 1L', sku: 'SUC-LAR-1L', category: 'Bebidas', supplier: 'Distribuidora Central', priceCost: 3.5, priceSale: 5.5, minStock: 40, stock: 90 },
       
       // Limpeza
-      { name: 'Detergente Ypê 500ml', sku: 'DET-500', category: 'Limpeza', supplier: 'Unilever', priceCost: 1.80, priceSale: 3.00, minStock: 50, stock: 120 },
-      { name: 'Sabão em Pó Omo 1kg', sku: 'SAB-OMO-1KG', category: 'Limpeza', supplier: 'Unilever', priceCost: 12.00, priceSale: 18.00, minStock: 30, stock: 70 },
-      { name: 'Água Sanitária 1L', sku: 'SAN-1L', category: 'Limpeza', supplier: 'Unilever', priceCost: 2.50, priceSale: 4.50, minStock: 40, stock: 95 },
-      { name: 'Desinfetante Pinho Sol 500ml', sku: 'DES-500', category: 'Limpeza', supplier: 'Unilever', priceCost: 3.50, priceSale: 6.00, minStock: 30, stock: 75 },
-      { name: 'Esponja de Aço', sku: 'ESP-001', category: 'Limpeza', supplier: 'Distribuidora Central', priceCost: 1.00, priceSale: 2.00, minStock: 50, stock: 130 },
+      { name: 'Detergente Ypê 500ml', sku: 'DET-500', category: 'Limpeza', supplier: 'Unilever', priceCost: 1.8, priceSale: 3, minStock: 50, stock: 120 },
+      { name: 'Sabão em Pó Omo 1kg', sku: 'SAB-OMO-1KG', category: 'Limpeza', supplier: 'Unilever', priceCost: 12, priceSale: 18, minStock: 30, stock: 70 },
+      { name: 'Água Sanitária 1L', sku: 'SAN-1L', category: 'Limpeza', supplier: 'Unilever', priceCost: 2.5, priceSale: 4.5, minStock: 40, stock: 95 },
+      { name: 'Desinfetante Pinho Sol 500ml', sku: 'DES-500', category: 'Limpeza', supplier: 'Unilever', priceCost: 3.5, priceSale: 6, minStock: 30, stock: 75 },
+      { name: 'Esponja de Aço', sku: 'ESP-001', category: 'Limpeza', supplier: 'Distribuidora Central', priceCost: 1, priceSale: 2, minStock: 50, stock: 130 },
       
       // Higiene Pessoal
-      { name: 'Sabonete Protex', sku: 'SAB-PROT', category: 'Higiene Pessoal', supplier: 'Procter & Gamble', priceCost: 1.50, priceSale: 2.50, minStock: 60, stock: 150 },
-      { name: 'Shampoo Pantene 400ml', sku: 'SHA-PAN-400', category: 'Higiene Pessoal', supplier: 'Procter & Gamble', priceCost: 8.00, priceSale: 14.00, minStock: 30, stock: 65 },
-      { name: 'Creme Dental Colgate 90g', sku: 'CRE-COL-90', category: 'Higiene Pessoal', supplier: 'Procter & Gamble', priceCost: 2.50, priceSale: 4.50, minStock: 50, stock: 110 },
-      { name: 'Papel Higiênico 4 Rolos', sku: 'PAP-4R', category: 'Higiene Pessoal', supplier: 'Procter & Gamble', priceCost: 4.50, priceSale: 7.50, minStock: 40, stock: 95 },
+      { name: 'Sabonete Protex', sku: 'SAB-PROT', category: 'Higiene Pessoal', supplier: 'Procter & Gamble', priceCost: 1.5, priceSale: 2.5, minStock: 60, stock: 150 },
+      { name: 'Shampoo Pantene 400ml', sku: 'SHA-PAN-400', category: 'Higiene Pessoal', supplier: 'Procter & Gamble', priceCost: 8, priceSale: 14, minStock: 30, stock: 65 },
+      { name: 'Creme Dental Colgate 90g', sku: 'CRE-COL-90', category: 'Higiene Pessoal', supplier: 'Procter & Gamble', priceCost: 2.5, priceSale: 4.5, minStock: 50, stock: 110 },
+      { name: 'Papel Higiênico 4 Rolos', sku: 'PAP-4R', category: 'Higiene Pessoal', supplier: 'Procter & Gamble', priceCost: 4.5, priceSale: 7.5, minStock: 40, stock: 95 },
       
       // Utilidades Domésticas
-      { name: 'Fósforo Caixa', sku: 'FOS-001', category: 'Utilidades Domésticas', supplier: 'Distribuidora Central', priceCost: 0.50, priceSale: 1.00, minStock: 100, stock: 250 },
-      { name: 'Vela Comum', sku: 'VEL-001', category: 'Utilidades Domésticas', supplier: 'Distribuidora Central', priceCost: 1.00, priceSale: 2.00, minStock: 50, stock: 120 },
-      { name: 'Lâmpada LED 9W', sku: 'LAM-LED-9W', category: 'Utilidades Domésticas', supplier: 'Distribuidora Central', priceCost: 5.00, priceSale: 8.50, minStock: 30, stock: 70 },
+      { name: 'Fósforo Caixa', sku: 'FOS-001', category: 'Utilidades Domésticas', supplier: 'Distribuidora Central', priceCost: 0.5, priceSale: 1, minStock: 100, stock: 250 },
+      { name: 'Vela Comum', sku: 'VEL-001', category: 'Utilidades Domésticas', supplier: 'Distribuidora Central', priceCost: 1, priceSale: 2, minStock: 50, stock: 120 },
+      { name: 'Lâmpada LED 9W', sku: 'LAM-LED-9W', category: 'Utilidades Domésticas', supplier: 'Distribuidora Central', priceCost: 5, priceSale: 8.5, minStock: 30, stock: 70 },
   ];
 }
 
@@ -318,9 +317,9 @@ async function populateDatabase() {
     const sales = getSalesData();
 
     printSummary(
-      parseInt(categories.rows[0].count),
-      parseInt(suppliers.rows[0].count),
-      parseInt(products.rows[0].count),
+      Number.parseInt(categories.rows[0].count),
+      Number.parseInt(suppliers.rows[0].count),
+      Number.parseInt(products.rows[0].count),
       entries.length,
       sales.length
     );

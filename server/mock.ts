@@ -6,7 +6,6 @@ import {
   Product,
   StockMovement,
   ExitReason,
-  Role,
 } from './types';
 
 const now = () => new Date().toISOString();

@@ -163,48 +163,48 @@ export default function UsersPage() {
             <div>
               <label htmlFor="user-email" className="block text-sm font-medium text-zinc-700 mb-1">
                 Email
+                <input
+                  id="user-email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                  placeholder="usuario@exemplo.com"
+                />
               </label>
-              <input
-                id="user-email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-                placeholder="usuario@exemplo.com"
-              />
             </div>
             <div>
               <label htmlFor="user-name" className="block text-sm font-medium text-zinc-700 mb-1">
                 Nome Completo
+                <input
+                  id="user-name"
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                  placeholder="Nome do usuário"
+                />
               </label>
-              <input
-                id="user-name"
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-                placeholder="Nome do usuário"
-              />
             </div>
             <div>
               <label htmlFor="user-role" className="block text-sm font-medium text-zinc-700 mb-1">
                 Perfil (RBAC)
+                <select
+                  id="user-role"
+                  value={formData.role}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value as Role })}
+                  className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                >
+                  <option value="OPERATOR">Operador Logístico</option>
+                  <option value="MANAGER">Gerente de Estoque</option>
+                  <option value="ADMIN">Administrador</option>
+                </select>
+                <p className="text-xs text-zinc-700 mt-1">
+                  Administrador: acesso total | Gerente: análise e cadastros | Operador: operações diárias
+                </p>
               </label>
-              <select
-                id="user-role"
-                value={formData.role}
-                onChange={(e) => setFormData({ ...formData, role: e.target.value as Role })}
-                className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-              >
-                <option value="OPERATOR">Operador Logístico</option>
-                <option value="MANAGER">Gerente de Estoque</option>
-                <option value="ADMIN">Administrador</option>
-              </select>
-              <p className="text-xs text-zinc-700 mt-1">
-                Administrador: acesso total | Gerente: análise e cadastros | Operador: operações diárias
-              </p>
             </div>
             <div className="flex items-center gap-2">
               <input

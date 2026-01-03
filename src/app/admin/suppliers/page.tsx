@@ -125,6 +125,57 @@ export default function SuppliersPage() {
     s.documentId?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const renderSuppliersContent = () => {
+    if (loading) {
+      return <div className="p-8 text-center text-zinc-700">Carregando fornecedores...</div>;
+    }
+    
+    if (filteredSuppliers.length === 0) {
+      const emptyMessage = searchTerm ? 'Nenhum fornecedor encontrado' : 'Nenhum fornecedor cadastrado';
+      return <div className="p-8 text-center text-zinc-700">{emptyMessage}</div>;
+    }
+    
+    return (
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm">
+          <thead className="bg-zinc-50 border-b">
+            <tr>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Nome</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">CNPJ/CPF</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Email</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredSuppliers.map((supplier) => (
+              <tr key={supplier.id} className="border-b last:border-0 hover:bg-zinc-50">
+                <td className="py-3 px-4 text-zinc-900 font-medium">{supplier.name}</td>
+                <td className="py-3 px-4 text-zinc-600">{supplier.documentId || '-'}</td>
+                <td className="py-3 px-4 text-zinc-600">{supplier.contactEmail || '-'}</td>
+                <td className="py-3 px-4">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEdit(supplier)}
+                      className="text-blue-600 hover:text-blue-700 text-xs font-medium"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleDelete(supplier)}
+                      className="text-red-600 hover:text-red-700 text-xs font-medium"
+                    >
+                      Excluir
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -226,51 +277,7 @@ export default function SuppliersPage() {
             className="px-3 py-2 border border-zinc-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
           />
         </div>
-        {loading ? (
-          <div className="p-8 text-center text-zinc-700">Carregando fornecedores...</div>
-        ) : filteredSuppliers.length === 0 ? (
-          <div className="p-8 text-center text-zinc-700">
-            {searchTerm ? 'Nenhum fornecedor encontrado' : 'Nenhum fornecedor cadastrado'}
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead className="bg-zinc-50 border-b">
-                <tr>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Nome</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">CNPJ/CPF</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Email</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredSuppliers.map((supplier) => (
-                  <tr key={supplier.id} className="border-b last:border-0 hover:bg-zinc-50">
-                    <td className="py-3 px-4 text-zinc-900 font-medium">{supplier.name}</td>
-                    <td className="py-3 px-4 text-zinc-600">{supplier.documentId || '-'}</td>
-                    <td className="py-3 px-4 text-zinc-600">{supplier.contactEmail || '-'}</td>
-                    <td className="py-3 px-4">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleEdit(supplier)}
-                          className="text-blue-600 hover:text-blue-700 text-xs font-medium"
-                        >
-                          Editar
-                        </button>
-                        <button
-                          onClick={() => handleDelete(supplier)}
-                          className="text-red-600 hover:text-red-700 text-xs font-medium"
-                        >
-                          Excluir
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        {renderSuppliersContent()}
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">

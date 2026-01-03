@@ -3,6 +3,7 @@ import cors from 'cors';
 import { config } from 'dotenv';
 import { randomUUID } from 'node:crypto';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { login, users, categories, suppliers, products, movements } from './mock';
 import { StockMovement, Product } from './types';
 import {
@@ -44,6 +45,32 @@ const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;
 // USE_MOCK será true se MOCK_DATA não for exatamente 'false' (case-insensitive)
 const MOCK_DATA_ENV = process.env.MOCK_DATA?.toLowerCase().trim();
 const USE_MOCK = MOCK_DATA_ENV !== 'false';
+
+// JWT Configuration
+const JWT_SECRET: string = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_EXPIRES_IN: string = process.env.JWT_EXPIRES_IN || '7d';
+
+// Funções auxiliares JWT
+function generateToken(userId: string): string {
+  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN } as jwt.SignOptions);
+}
+
+function verifyToken(token: string): { userId: string } | null {
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+    return decoded;
+  } catch (error) {
+    return null;
+  }
+}
+
+function extractTokenFromHeader(authHeader: string | undefined): string | null {
+  if (!authHeader) return null;
+  if (authHeader.startsWith('Bearer ')) {
+    return authHeader.substring(7);
+  }
+  return authHeader;
+}
 
 // Auth
 app.post('/api/auth/login', async (req, res) => {
@@ -89,9 +116,12 @@ app.post('/api/auth/login', async (req, res) => {
     // Remover passwordHash da resposta
     const { passwordHash, ...safeUser } = user;
     
+    // Gerar token JWT
+    const token = generateToken(user.id);
+    
     console.log(`[LOGIN] ✅ Login bem-sucedido para ${user.email}`);
   return res.json({
-    token: 'token-' + user.id,
+    token,
       user: safeUser,
   });
   } catch (error) {
@@ -110,14 +140,33 @@ app.get('/api/users/me', async (req, res) => {
     return res.json(user);
   }
   
-  // TODO: Extrair user do token JWT
-  // Por enquanto, retorna o primeiro usuário ativo
   try {
-    const user = await getUserById(req.headers['x-user-id'] as string || '');
-    if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
+    // Extrair token do header Authorization
+    const authHeader = req.headers.authorization || req.headers['x-auth-token'] as string;
+    const token = extractTokenFromHeader(authHeader);
+    
+    if (!token) {
+      return res.status(401).json({ message: 'Token não fornecido' });
+    }
+    
+    // Verificar e decodificar token JWT
+    const decoded = verifyToken(token);
+    if (!decoded) {
+      return res.status(401).json({ message: 'Token inválido ou expirado' });
+    }
+    
+    // Buscar usuário pelo ID do token
+    const user = await getUserById(decoded.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado' });
+    }
+    
+    // getUserById já retorna o usuário sem passwordHash
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar usuário' });
+    console.error('[USERS/ME] Erro:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao buscar usuário';
+    res.status(500).json({ message });
   }
 });
 
@@ -131,7 +180,9 @@ app.get('/api/users', async (_req, res) => {
     const data = await getAllUsers();
     res.json(data);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar usuários' });
+    console.error('[USERS] Erro:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao buscar usuários';
+    res.status(500).json({ message });
   }
 });
 
@@ -145,7 +196,9 @@ app.get('/api/categories', async (_req, res) => {
     const data = await getAllCategories();
     res.json(data);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar categorias' });
+    console.error('[CATEGORIES] Erro:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao buscar categorias';
+    res.status(500).json({ message });
   }
 });
 
@@ -162,8 +215,9 @@ app.post('/api/categories', async (req, res) => {
     const category = await createCategory({ name });
     res.status(201).json(category);
   } catch (error) {
-    console.error('Erro ao criar categoria:', error);
-    res.status(500).json({ message: 'Erro ao criar categoria' });
+    console.error('[CATEGORIES] Erro ao criar:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao criar categoria';
+    res.status(500).json({ message });
   }
 });
 
@@ -222,7 +276,9 @@ app.get('/api/suppliers', async (_req, res) => {
     const data = await getAllSuppliers();
     res.json(data);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar fornecedores' });
+    console.error('[SUPPLIERS] Erro:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao buscar fornecedores';
+    res.status(500).json({ message });
   }
 });
 
@@ -244,8 +300,9 @@ app.post('/api/suppliers', async (req, res) => {
     const supplier = await createSupplier({ name, documentId, contactEmail });
     res.status(201).json(supplier);
   } catch (error) {
-    console.error('Erro ao criar fornecedor:', error);
-    res.status(500).json({ message: 'Erro ao criar fornecedor' });
+    console.error('[SUPPLIERS] Erro ao criar:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao criar fornecedor';
+    res.status(500).json({ message });
   }
 });
 
@@ -286,11 +343,12 @@ app.delete('/api/suppliers/:id', async (req, res) => {
     await deleteSupplier(id);
     res.status(204).send();
   } catch (error) {
-    console.error('Erro ao excluir fornecedor:', error);
+    console.error('[SUPPLIERS] Erro ao excluir:', error);
     if (error instanceof Error && error.message.includes('não encontrado')) {
       return res.status(404).json({ message: error.message });
     }
-    res.status(500).json({ message: 'Erro ao excluir fornecedor' });
+    const message = error instanceof Error ? error.message : 'Erro ao excluir fornecedor';
+    res.status(500).json({ message });
   }
 });
 
@@ -304,7 +362,9 @@ app.get('/api/products', async (_req, res) => {
     const data = await getAllProducts();
     res.json(data);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar produtos' });
+    console.error('[PRODUCTS] Erro:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao buscar produtos';
+    res.status(500).json({ message });
   }
 });
 
@@ -342,8 +402,9 @@ app.post('/api/products', async (req, res) => {
     });
     res.status(201).json(product);
   } catch (error) {
-    console.error('Erro ao criar produto:', error);
-    res.status(500).json({ message: 'Erro ao criar produto' });
+    console.error('[PRODUCTS] Erro ao criar:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao criar produto';
+    res.status(500).json({ message });
   }
 });
 
@@ -383,11 +444,12 @@ app.put('/api/products/:id', async (req, res) => {
     });
     res.json(product);
   } catch (error) {
-    console.error('Erro ao atualizar produto:', error);
+    console.error('[PRODUCTS] Erro ao atualizar:', error);
     if (error instanceof Error && error.message.includes('não encontrado')) {
       return res.status(404).json({ message: error.message });
     }
-    res.status(500).json({ message: 'Erro ao atualizar produto' });
+    const message = error instanceof Error ? error.message : 'Erro ao atualizar produto';
+    res.status(500).json({ message });
   }
 });
 
@@ -405,11 +467,12 @@ app.delete('/api/products/:id', async (req, res) => {
     await deleteProduct(id);
     res.status(204).send();
   } catch (error) {
-    console.error('Erro ao excluir produto:', error);
+    console.error('[PRODUCTS] Erro ao excluir:', error);
     if (error instanceof Error && error.message.includes('não encontrado')) {
       return res.status(404).json({ message: error.message });
     }
-    res.status(500).json({ message: 'Erro ao excluir produto' });
+    const message = error instanceof Error ? error.message : 'Erro ao excluir produto';
+    res.status(500).json({ message });
   }
 });
 
@@ -423,7 +486,9 @@ app.get('/api/movements', async (_req, res) => {
     const data = await getAllMovements();
     res.json(data);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar movimentações' });
+    console.error('[MOVEMENTS] Erro:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao buscar movimentações';
+    res.status(500).json({ message });
   }
 });
 
@@ -540,7 +605,9 @@ app.get('/api/reports/stock', async (_req, res) => {
     const report = await getStockReport();
     res.json(report);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao gerar relatório de estoque' });
+    console.error('[REPORTS/STOCK] Erro:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao gerar relatório de estoque';
+    res.status(500).json({ message });
   }
 });
 
@@ -564,7 +631,9 @@ app.get('/api/reports/sales', async (_req, res) => {
     const summary = await getSalesReport();
     res.json(summary);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao gerar relatório de vendas' });
+    console.error('[REPORTS/SALES] Erro:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao gerar relatório de vendas';
+    res.status(500).json({ message });
   }
 });
 
@@ -598,7 +667,7 @@ app.get('/api/reports/sales/detailed', async (_req, res) => {
       }, new Map())
     ).map(([_, v]) => v);
 
-    const salesByPeriod = Array.from(
+    const salesByPeriodUnsorted = Array.from(
       salesMovements.reduce((acc, m) => {
         const date = new Date(m.createdAt).toISOString().split('T')[0];
         if (!acc.has(date)) {
@@ -616,9 +685,10 @@ app.get('/api/reports/sales/detailed', async (_req, res) => {
         item.totalRevenue += m.quantity * (product?.priceSale || 0);
         return acc;
       }, new Map())
-    ).map(([_, v]) => v).sort((a, b) => b.date.localeCompare(a.date));
+    ).map(([_, v]) => v);
+    const salesByPeriod = salesByPeriodUnsorted.toSorted((a, b) => b.date.localeCompare(a.date));
 
-    const sortedProducts = salesByProduct.sort((a, b) => b.totalQuantity - a.totalQuantity);
+    const sortedProducts = salesByProduct.toSorted((a, b) => b.totalQuantity - a.totalQuantity);
     const topProducts = sortedProducts.slice(0, 10);
 
     return res.json({
@@ -632,7 +702,9 @@ app.get('/api/reports/sales/detailed', async (_req, res) => {
     const detailed = await getDetailedSalesReport();
     res.json(detailed);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao gerar relatório detalhado de vendas' });
+    console.error('[REPORTS/SALES/DETAILED] Erro:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao gerar relatório detalhado de vendas';
+    res.status(500).json({ message });
   }
 });
 
@@ -656,8 +728,9 @@ app.get('/api/settings', async (_req, res) => {
     const settings = await getSystemSettings();
     res.json(settings);
   } catch (error) {
-    console.error('Erro ao buscar configurações:', error);
-    res.status(500).json({ message: 'Erro ao buscar configurações' });
+    console.error('[SETTINGS] Erro ao buscar:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao buscar configurações';
+    res.status(500).json({ message });
   }
 });
 
@@ -673,8 +746,9 @@ app.put('/api/settings', async (req, res) => {
     await updateSystemSettings(settings);
     res.json({ message: 'Configurações salvas com sucesso' });
   } catch (error) {
-    console.error('Erro ao salvar configurações:', error);
-    res.status(500).json({ message: 'Erro ao salvar configurações' });
+    console.error('[SETTINGS] Erro ao salvar:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao salvar configurações';
+    res.status(500).json({ message });
   }
 });
 

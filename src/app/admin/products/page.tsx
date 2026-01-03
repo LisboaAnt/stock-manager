@@ -225,122 +225,121 @@ export default function ProductsPage() {
                 <div>
                   <label htmlFor="product-name" className="block text-sm font-medium text-zinc-700 mb-1">
                     Nome do Produto *
+                    <input
+                      id="product-name"
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                      placeholder="Nome do produto"
+                    />
                   </label>
-                  <input
-                    id="product-name"
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-                    placeholder="Nome do produto"
-                  />
                 </div>
                 <div>
                   <label htmlFor="product-sku" className="block text-sm font-medium text-zinc-700 mb-1">
                     SKU (Código Único) *
+                    <input
+                      id="product-sku"
+                      type="text"
+                      required
+                      value={formData.sku}
+                      onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
+                      className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                      placeholder="SKU-001"
+                    />
                   </label>
-                  <input
-                    id="product-sku"
-                    type="text"
-                    required
-                    value={formData.sku}
-                    onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-                    placeholder="SKU-001"
-                  />
                 </div>
                 <div>
                   <label htmlFor="product-barcode" className="block text-sm font-medium text-zinc-700 mb-1">
                     Código de Barras (EAN) *
+                    <input
+                      id="product-barcode"
+                      type="text"
+                      required
+                      value={formData.barcode}
+                      onChange={(e) => setFormData({ ...formData, barcode: e.target.value })}
+                      className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                      placeholder="789000000001"
+                    />
                   </label>
-                  <input
-                    id="product-barcode"
-                    type="text"
-                    required
-                    value={formData.barcode}
-                    onChange={(e) => setFormData({ ...formData, barcode: e.target.value })}
-                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-                    placeholder="789000000001"
-                  />
                 </div>
                 <div>
                   <label htmlFor="product-category" className="block text-sm font-medium text-zinc-700 mb-1">
                     Categoria *
+                    <select
+                      id="product-category"
+                      required
+                      value={formData.categoryId}
+                      onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+                      className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                    >
+                      <option value="">Selecione uma categoria</option>
+                      {categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                    </select>
                   </label>
-                  <select
-                    id="product-category"
-                    required
-                    value={formData.categoryId}
-                    onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-                  >
-                    <option value="">Selecione uma categoria</option>
-                    {categories.map(cat => (
-                      <option key={cat.id} value={cat.id}>{cat.name}</option>
-                    ))}
-                  </select>
                 </div>
                 <div>
                   <label htmlFor="product-price-cost" className="block text-sm font-medium text-zinc-700 mb-1">
                     Preço de Custo (R$) *
+                    <input
+                      id="product-price-cost"
+                      type="number"
+                      step="0.01"
+                      required
+                      value={formData.priceCost}
+                      onChange={(e) => setFormData({ ...formData, priceCost: e.target.value })}
+                      className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                      placeholder="0.00"
+                    />
                   </label>
-                  <input
-                    id="product-price-cost"
-                    type="number"
-                    step="0.01"
-                    required
-                    value={formData.priceCost}
-                    onChange={(e) => setFormData({ ...formData, priceCost: e.target.value })}
-                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-                    placeholder="0.00"
-                  />
                 </div>
                 <div>
                   <label htmlFor="product-price-sale" className="block text-sm font-medium text-zinc-700 mb-1">
                     Preço de Venda (R$) *
+                    <input
+                      id="product-price-sale"
+                      type="number"
+                      step="0.01"
+                      required
+                      value={formData.priceSale}
+                      onChange={(e) => setFormData({ ...formData, priceSale: e.target.value })}
+                      className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                      placeholder="0.00"
+                    />
                   </label>
-                  <input
-                    id="product-price-sale"
-                    type="number"
-                    step="0.01"
-                    required
-                    value={formData.priceSale}
-                    onChange={(e) => setFormData({ ...formData, priceSale: e.target.value })}
-                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-                    placeholder="0.00"
-                  />
                 </div>
                 <div>
                   <label htmlFor="product-min-stock" className="block text-sm font-medium text-zinc-700 mb-1">
                     Estoque Mínimo *
+                    <input
+                      id="product-min-stock"
+                      type="number"
+                      required
+                      min="0"
+                      value={formData.minStock}
+                      onChange={(e) => setFormData({ ...formData, minStock: e.target.value })}
+                      className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                      placeholder="5"
+                    />
+                    <p className="text-xs text-zinc-700 mt-1">
+                      Sistema gerará alerta quando estoque estiver abaixo deste valor
+                    </p>
                   </label>
-                  <input
-                    id="product-min-stock"
-                    type="number"
-                    required
-                    min="0"
-                    value={formData.minStock}
-                    onChange={(e) => setFormData({ ...formData, minStock: e.target.value })}
-                    className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-                    placeholder="5"
-                  />
-                  <p className="text-xs text-zinc-700 mt-1">
-                    Sistema gerará alerta quando estoque estiver abaixo deste valor
-                  </p>
                 </div>
                 <div>
                   <label htmlFor="product-suppliers" className="block text-sm font-medium text-zinc-700 mb-1">
                     Fornecedores
-                  </label>
-                  <select
-                    id="product-suppliers"
-                    multiple
-                    value={formData.supplierIds}
-                    onChange={(e) => {
-                      const selected = Array.from(e.target.selectedOptions, option => option.value);
-                      setFormData({ ...formData, supplierIds: selected });
-                    }}
+                    <select
+                      id="product-suppliers"
+                      multiple
+                      value={formData.supplierIds}
+                      onChange={(e) => {
+                        const selected = Array.from(e.target.selectedOptions, option => option.value);
+                        setFormData({ ...formData, supplierIds: selected });
+                      }}
                     className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
                     size={3}
                   >

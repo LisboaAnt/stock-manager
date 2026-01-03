@@ -117,29 +117,29 @@ export default function SettingsPage() {
             <div>
               <label htmlFor="setting-system-name" className="block text-sm font-medium text-zinc-700 mb-1">
                 Nome do Sistema
+                <input
+                  id="setting-system-name"
+                  type="text"
+                  value={settings.systemName}
+                  onChange={(e) => setSettings({ ...settings, systemName: e.target.value })}
+                  className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                />
               </label>
-              <input
-                id="setting-system-name"
-                type="text"
-                value={settings.systemName}
-                onChange={(e) => setSettings({ ...settings, systemName: e.target.value })}
-                className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-              />
             </div>
             <div>
               <label htmlFor="setting-currency" className="block text-sm font-medium text-zinc-700 mb-1">
                 Moeda Padrão
+                <select
+                  id="setting-currency"
+                  value={settings.defaultCurrency}
+                  onChange={(e) => setSettings({ ...settings, defaultCurrency: e.target.value })}
+                  className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                >
+                  <option value="BRL">BRL (Real Brasileiro)</option>
+                  <option value="USD">USD (Dólar Americano)</option>
+                  <option value="EUR">EUR (Euro)</option>
+                </select>
               </label>
-              <select
-                id="setting-currency"
-                value={settings.defaultCurrency}
-                onChange={(e) => setSettings({ ...settings, defaultCurrency: e.target.value })}
-                className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-              >
-                <option value="BRL">BRL (Real Brasileiro)</option>
-                <option value="USD">USD (Dólar Americano)</option>
-                <option value="EUR">EUR (Euro)</option>
-              </select>
             </div>
           </div>
         </section>
@@ -148,65 +148,65 @@ export default function SettingsPage() {
           <h3 className="text-lg font-semibold text-zinc-900 mb-4">Configurações de Estoque</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="setting-min-stock-alert" className="flex-1 cursor-pointer">
+                <div className="block text-sm font-medium text-zinc-700 mb-1">
                   Alertas de Estoque Mínimo
-                </label>
+                </div>
                 <p className="text-xs text-zinc-700">
                   Notificar quando estoque estiver abaixo do mínimo (RF23, RF29)
                 </p>
-              </div>
-              <label htmlFor="setting-min-stock-alert" className="relative inline-flex items-center cursor-pointer">
-                <input
-                  id="setting-min-stock-alert"
-                  type="checkbox"
-                  checked={settings.minStockAlert}
-                  onChange={(e) => setSettings({ ...settings, minStockAlert: e.target.checked })}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                <div className="relative inline-flex items-center mt-2">
+                  <input
+                    id="setting-min-stock-alert"
+                    type="checkbox"
+                    checked={settings.minStockAlert}
+                    onChange={(e) => setSettings({ ...settings, minStockAlert: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </div>
               </label>
             </div>
 
             <div className="flex items-center justify-between">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="setting-auto-calculate" className="flex-1 cursor-pointer">
+                <div className="block text-sm font-medium text-zinc-700 mb-1">
                   Cálculo Automático de Custo Médio
-                </label>
+                </div>
                 <p className="text-xs text-zinc-700">
                   Calcular custo médio automaticamente nas entradas (RF22)
                 </p>
-              </div>
-              <label htmlFor="setting-auto-calculate" className="relative inline-flex items-center cursor-pointer">
-                <input
-                  id="setting-auto-calculate"
-                  type="checkbox"
-                  checked={settings.autoCalculateCost}
-                  onChange={(e) => setSettings({ ...settings, autoCalculateCost: e.target.checked })}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                <div className="relative inline-flex items-center mt-2">
+                  <input
+                    id="setting-auto-calculate"
+                    type="checkbox"
+                    checked={settings.autoCalculateCost}
+                    onChange={(e) => setSettings({ ...settings, autoCalculateCost: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </div>
               </label>
             </div>
 
             <div className="flex items-center justify-between">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="setting-expiry-alerts" className="flex-1 cursor-pointer">
+                <div className="block text-sm font-medium text-zinc-700 mb-1">
                   Alertas de Validade
-                </label>
+                </div>
                 <p className="text-xs text-zinc-700">
                   Notificar sobre produtos próximos da validade (RF27)
                 </p>
-              </div>
-              <label htmlFor="setting-expiry-alerts" className="relative inline-flex items-center cursor-pointer">
-                <input
-                  id="setting-expiry-alerts"
-                  type="checkbox"
-                  checked={settings.enableExpiryAlerts}
-                  onChange={(e) => setSettings({ ...settings, enableExpiryAlerts: e.target.checked })}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                <div className="relative inline-flex items-center mt-2">
+                  <input
+                    id="setting-expiry-alerts"
+                    type="checkbox"
+                    checked={settings.enableExpiryAlerts}
+                    onChange={(e) => setSettings({ ...settings, enableExpiryAlerts: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </div>
               </label>
             </div>
           </div>
@@ -218,37 +218,37 @@ export default function SettingsPage() {
             <div>
               <label htmlFor="setting-retention" className="block text-sm font-medium text-zinc-700 mb-1">
                 Período de Retenção de Histórico (meses)
+                <input
+                  id="setting-retention"
+                  type="number"
+                  min="1"
+                  max="60"
+                  value={settings.retentionPeriod}
+                  onChange={(e) => setSettings({ ...settings, retentionPeriod: Number.parseInt(e.target.value) })}
+                  className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                />
+                <p className="text-xs text-zinc-700 mt-1">
+                  Histórico de movimentações será mantido por {settings.retentionPeriod} meses
+                </p>
               </label>
-              <input
-                id="setting-retention"
-                type="number"
-                min="1"
-                max="60"
-                value={settings.retentionPeriod}
-                onChange={(e) => setSettings({ ...settings, retentionPeriod: Number.parseInt(e.target.value) })}
-                className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-              />
-              <p className="text-xs text-zinc-700 mt-1">
-                Histórico de movimentações será mantido por {settings.retentionPeriod} meses
-              </p>
             </div>
             <div>
               <label htmlFor="setting-max-products" className="block text-sm font-medium text-zinc-700 mb-1">
                 Limite Máximo de Produtos
+                <input
+                  id="setting-max-products"
+                  type="number"
+                  min="100"
+                  max="100000"
+                  step="100"
+                  value={settings.maxProducts}
+                  onChange={(e) => setSettings({ ...settings, maxProducts: Number.parseInt(e.target.value) })}
+                  className="w-full mt-1 px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
+                />
+                <p className="text-xs text-zinc-700 mt-1">
+                  Sistema suporta até {settings.maxProducts.toLocaleString('pt-BR')} produtos (RNF08)
+                </p>
               </label>
-              <input
-                id="setting-max-products"
-                type="number"
-                min="100"
-                max="100000"
-                step="100"
-                value={settings.maxProducts}
-                onChange={(e) => setSettings({ ...settings, maxProducts: Number.parseInt(e.target.value) })}
-                className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
-              />
-              <p className="text-xs text-zinc-700 mt-1">
-                Sistema suporta até {settings.maxProducts.toLocaleString('pt-BR')} produtos (RNF08)
-              </p>
             </div>
           </div>
         </section>
@@ -257,23 +257,23 @@ export default function SettingsPage() {
           <h3 className="text-lg font-semibold text-zinc-900 mb-4">Funcionalidades</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="setting-barcode-scan" className="flex-1 cursor-pointer">
+                <div className="block text-sm font-medium text-zinc-700 mb-1">
                   Leitura de Código de Barras
-                </label>
+                </div>
                 <p className="text-xs text-zinc-700">
                   Habilitar suporte a leitura de código de barras (RNF21)
                 </p>
-              </div>
-              <label htmlFor="setting-barcode-scan" className="relative inline-flex items-center cursor-pointer">
-                <input
-                  id="setting-barcode-scan"
-                  type="checkbox"
-                  checked={settings.enableBarcodeScan}
-                  onChange={(e) => setSettings({ ...settings, enableBarcodeScan: e.target.checked })}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                <div className="relative inline-flex items-center mt-2">
+                  <input
+                    id="setting-barcode-scan"
+                    type="checkbox"
+                    checked={settings.enableBarcodeScan}
+                    onChange={(e) => setSettings({ ...settings, enableBarcodeScan: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </div>
               </label>
             </div>
           </div>
