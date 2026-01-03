@@ -26,7 +26,6 @@ export default function MovementsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [activeTab, setActiveTab] = useState<'ENTRY' | 'EXIT' | 'ADJUSTMENT'>('ENTRY');
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   
@@ -47,7 +46,6 @@ export default function MovementsPage() {
 
   const loadData = async () => {
     try {
-      setLoading(true);
       const [productsData, suppliersData] = await Promise.all([
         apiFetch<Product[]>('/api/products'),
         apiFetch<Supplier[]>('/api/suppliers'),
@@ -56,8 +54,6 @@ export default function MovementsPage() {
       setSuppliers(suppliersData);
     } catch (err: any) {
       setError(err.message || 'Erro ao carregar dados');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -83,7 +79,10 @@ export default function MovementsPage() {
 
       // Validação para ajuste: apenas Admin/Gerente
       if (activeTab === 'ADJUSTMENT') {
-        // TODO: Verificar permissão do usuário
+        if (!canAdjust) {
+          setError('Apenas Administradores e Gerentes podem realizar ajustes de inventário (RF09)');
+          return;
+        }
       }
 
       if (!userId) {

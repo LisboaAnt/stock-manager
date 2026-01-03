@@ -224,8 +224,7 @@ export default function ProductsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="product-name" className="block text-sm font-medium text-zinc-700 mb-1">
-                    Nome do Produto *
-                    <input
+                    Nome do Produto *<input
                       id="product-name"
                       type="text"
                       required
@@ -238,8 +237,7 @@ export default function ProductsPage() {
                 </div>
                 <div>
                   <label htmlFor="product-sku" className="block text-sm font-medium text-zinc-700 mb-1">
-                    SKU (Código Único) *
-                    <input
+                    SKU (Código Único) *<input
                       id="product-sku"
                       type="text"
                       required
@@ -252,8 +250,7 @@ export default function ProductsPage() {
                 </div>
                 <div>
                   <label htmlFor="product-barcode" className="block text-sm font-medium text-zinc-700 mb-1">
-                    Código de Barras (EAN) *
-                    <input
+                    Código de Barras (EAN) *<input
                       id="product-barcode"
                       type="text"
                       required
@@ -266,8 +263,7 @@ export default function ProductsPage() {
                 </div>
                 <div>
                   <label htmlFor="product-category" className="block text-sm font-medium text-zinc-700 mb-1">
-                    Categoria *
-                    <select
+                    Categoria *<select
                       id="product-category"
                       required
                       value={formData.categoryId}
@@ -283,8 +279,7 @@ export default function ProductsPage() {
                 </div>
                 <div>
                   <label htmlFor="product-price-cost" className="block text-sm font-medium text-zinc-700 mb-1">
-                    Preço de Custo (R$) *
-                    <input
+                    Preço de Custo (R$) *<input
                       id="product-price-cost"
                       type="number"
                       step="0.01"
@@ -298,8 +293,7 @@ export default function ProductsPage() {
                 </div>
                 <div>
                   <label htmlFor="product-price-sale" className="block text-sm font-medium text-zinc-700 mb-1">
-                    Preço de Venda (R$) *
-                    <input
+                    Preço de Venda (R$) *<input
                       id="product-price-sale"
                       type="number"
                       step="0.01"
@@ -313,8 +307,7 @@ export default function ProductsPage() {
                 </div>
                 <div>
                   <label htmlFor="product-min-stock" className="block text-sm font-medium text-zinc-700 mb-1">
-                    Estoque Mínimo *
-                    <input
+                    Estoque Mínimo *<input
                       id="product-min-stock"
                       type="number"
                       required
@@ -331,8 +324,7 @@ export default function ProductsPage() {
                 </div>
                 <div>
                   <label htmlFor="product-suppliers" className="block text-sm font-medium text-zinc-700 mb-1">
-                    Fornecedores
-                    <select
+                    Fornecedores<select
                       id="product-suppliers"
                       multiple
                       value={formData.supplierIds}

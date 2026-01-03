@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
-import { useAuth } from '@/lib/useAuth';
 
 type Role = 'ADMIN' | 'MANAGER' | 'OPERATOR';
 
@@ -47,32 +46,8 @@ export default function UsersPage() {
   const loadUsers = async () => {
     try {
       setLoading(true);
-      // TODO: Implementar endpoint /api/users quando backend estiver pronto
-      // Por enquanto, usando mock
-      const mockUsers: User[] = [
-        {
-          id: '1',
-          email: 'admin@stock.local',
-          name: 'Administrador',
-          role: 'ADMIN',
-          isActive: true,
-        },
-        {
-          id: '2',
-          email: 'gerente@stock.local',
-          name: 'Gerente de Estoque',
-          role: 'MANAGER',
-          isActive: true,
-        },
-        {
-          id: '3',
-          email: 'operador@stock.local',
-          name: 'Operador Logístico',
-          role: 'OPERATOR',
-          isActive: true,
-        },
-      ];
-      setUsers(mockUsers);
+      const data = await apiFetch<User[]>('/api/users');
+      setUsers(data);
     } catch (err: any) {
       setError(err.message || 'Erro ao carregar usuários');
     } finally {
@@ -83,21 +58,24 @@ export default function UsersPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // TODO: Implementar chamada à API
+      setError(null);
       if (editingUser) {
         // Atualizar usuário
-        setUsers(users.map(u => u.id === editingUser.id ? { ...u, ...formData } : u));
+        await apiFetch<User>(`/api/users/${editingUser.id}`, {
+          method: 'PUT',
+          body: JSON.stringify(formData),
+        });
       } else {
         // Criar novo usuário
-        const newUser: User = {
-          id: Date.now().toString(),
-          ...formData,
-        };
-        setUsers([...users, newUser]);
+        await apiFetch<User>('/api/users', {
+          method: 'POST',
+          body: JSON.stringify(formData),
+        });
       }
       setShowForm(false);
       setEditingUser(null);
       setFormData({ email: '', name: '', role: 'OPERATOR', isActive: true });
+      await loadUsers(); // Recarregar lista de usuários
     } catch (err: any) {
       setError(err.message || 'Erro ao salvar usuário');
     }
@@ -162,8 +140,7 @@ export default function UsersPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="user-email" className="block text-sm font-medium text-zinc-700 mb-1">
-                Email
-                <input
+                Email<input
                   id="user-email"
                   type="email"
                   required
@@ -176,8 +153,7 @@ export default function UsersPage() {
             </div>
             <div>
               <label htmlFor="user-name" className="block text-sm font-medium text-zinc-700 mb-1">
-                Nome Completo
-                <input
+                Nome Completo<input
                   id="user-name"
                   type="text"
                   required
@@ -190,8 +166,7 @@ export default function UsersPage() {
             </div>
             <div>
               <label htmlFor="user-role" className="block text-sm font-medium text-zinc-700 mb-1">
-                Perfil (RBAC)
-                <select
+                Perfil (RBAC)<select
                   id="user-role"
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value as Role })}

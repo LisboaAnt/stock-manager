@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Package, Users, Settings, LogOut, Truck, ArrowUpDown, History, FileText, FolderTree } from 'lucide-react';
 
-type SidebarLayoutProps = {
+type SidebarLayoutProps = Readonly<{
   children: React.ReactNode;
   userRole?: 'ADMIN' | 'MANAGER' | 'OPERATOR';
-};
+}>;
 
 export default function SidebarLayout({ children, userRole = 'ADMIN' }: SidebarLayoutProps) {
   const pathname = usePathname();

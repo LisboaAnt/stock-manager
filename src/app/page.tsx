@@ -48,26 +48,21 @@ export default function Home() {
 
       {/* Modal de Doação */}
       {showDonation && (
-        <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" 
-          onClick={() => setShowDonation(false)}
-          role="button"
-          aria-label="Fechar modal"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              setShowDonation(false);
-            }
-          }}
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <button
+            type="button"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm border-0 cursor-default"
+            onClick={() => setShowDonation(false)}
+            aria-label="Fechar modal"
+          />
           <div 
-            className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl" 
+            className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl relative z-10" 
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby="donation-title"
+            tabIndex={0}
           >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">

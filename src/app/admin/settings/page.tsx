@@ -116,8 +116,7 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <div>
               <label htmlFor="setting-system-name" className="block text-sm font-medium text-zinc-700 mb-1">
-                Nome do Sistema
-                <input
+                Nome do Sistema<input
                   id="setting-system-name"
                   type="text"
                   value={settings.systemName}
@@ -128,8 +127,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <label htmlFor="setting-currency" className="block text-sm font-medium text-zinc-700 mb-1">
-                Moeda Padrão
-                <select
+                Moeda Padrão<select
                   id="setting-currency"
                   value={settings.defaultCurrency}
                   onChange={(e) => setSettings({ ...settings, defaultCurrency: e.target.value })}
@@ -217,8 +215,7 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <div>
               <label htmlFor="setting-retention" className="block text-sm font-medium text-zinc-700 mb-1">
-                Período de Retenção de Histórico (meses)
-                <input
+                Período de Retenção de Histórico (meses)<input
                   id="setting-retention"
                   type="number"
                   min="1"
@@ -234,8 +231,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <label htmlFor="setting-max-products" className="block text-sm font-medium text-zinc-700 mb-1">
-                Limite Máximo de Produtos
-                <input
+                Limite Máximo de Produtos<input
                   id="setting-max-products"
                   type="number"
                   min="100"

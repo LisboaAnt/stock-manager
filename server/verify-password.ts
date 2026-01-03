@@ -4,23 +4,20 @@ import { config } from 'dotenv';
 
 config();
 
-async function verifyPassword() {
-  try {
-    const email = 'admin@stock.local';
-    const password = 'admin123';
-    
-    console.log('🔍 Verificando senha do usuário...\n');
-    
-    const result = await pool.query(
-      'SELECT id, email, password_hash FROM users WHERE email = $1',
-      [email]
-    );
-    
-    if (result.rows.length === 0) {
-      console.log('❌ Usuário não encontrado!');
-      return;
-    }
-    
+try {
+  const email = 'admin@stock.local';
+  const password = 'admin123';
+  
+  console.log('🔍 Verificando senha do usuário...\n');
+  
+  const result = await pool.query(
+    'SELECT id, email, password_hash FROM users WHERE email = $1',
+    [email]
+  );
+  
+  if (result.rows.length === 0) {
+    console.log('❌ Usuário não encontrado!');
+  } else {
     const user = result.rows[0];
     console.log(`✅ Usuário encontrado: ${user.email}`);
     console.log(`   ID: ${user.id}`);
@@ -50,13 +47,11 @@ async function verifyPassword() {
     } else {
       console.log('❌ Usuário não possui senha!');
     }
-    
-  } catch (error) {
-    console.error('❌ Erro:', error);
-  } finally {
-    await pool.end();
   }
+  
+} catch (error) {
+  console.error('❌ Erro:', error);
+} finally {
+  await pool.end();
 }
-
-verifyPassword();
 

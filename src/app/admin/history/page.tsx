@@ -113,6 +113,12 @@ export default function HistoryPage() {
     return reason ? labels[reason as keyof typeof labels] || reason : '-';
   };
 
+  const getQuantitySign = (type: 'ENTRY' | 'EXIT' | 'ADJUSTMENT') => {
+    if (type === 'ENTRY') return '+';
+    if (type === 'EXIT') return '-';
+    return '=';
+  };
+
   // Obter userId do usuário logado
   const getCurrentUserId = () => {
     const userStr = localStorage.getItem('user');
@@ -120,7 +126,8 @@ export default function HistoryPage() {
       try {
         const user = JSON.parse(userStr);
         return user.id;
-      } catch (e) {
+      } catch (error) {
+        console.error('[HISTORY] Erro ao parsear usuário do localStorage:', error);
         return null;
       }
     }
@@ -141,6 +148,66 @@ export default function HistoryPage() {
     if (filters.endDate && new Date(m.createdAt) > new Date(filters.endDate)) return false;
     return true;
   });
+
+  const renderMovementsContent = () => {
+    if (loading) {
+      return <div className="p-8 text-center text-zinc-700">Carregando histórico...</div>;
+    }
+    
+    if (filteredMovements.length === 0) {
+      return <div className="p-8 text-center text-zinc-700">Nenhuma movimentação encontrada</div>;
+    }
+    
+    return (
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm">
+          <thead className="bg-zinc-50 border-b">
+            <tr>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Data/Hora</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Produto</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Tipo</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Quantidade</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Motivo</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Usuário</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Observações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredMovements.map((movement) => (
+              <tr key={movement.id} className="border-b last:border-0 hover:bg-zinc-50">
+                <td className="py-3 px-4 text-zinc-900">
+                  {new Date(movement.createdAt).toLocaleString('pt-BR')}
+                </td>
+                <td className="py-3 px-4 text-zinc-900">
+                  <div>
+                    <p className="font-medium text-zinc-900">{getProductName(movement.productId)}</p>
+                    <p className="text-xs text-zinc-700">SKU: {getProductSku(movement.productId)}</p>
+                  </div>
+                </td>
+                <td className="py-3 px-4 text-zinc-900">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(movement.type)}`}>
+                    {getTypeLabel(movement.type)}
+                  </span>
+                </td>
+                <td className="py-3 px-4 text-zinc-900 font-medium">
+                  {getQuantitySign(movement.type)}{movement.quantity}
+                </td>
+                <td className="py-3 px-4 text-zinc-900">
+                  {movement.reason ? getReasonLabel(movement.reason) : '-'}
+                </td>
+                <td className="py-3 px-4 text-zinc-900">
+                  {getUserName(movement)}
+                </td>
+                <td className="py-3 px-4 text-zinc-900 text-xs">
+                  {movement.notes || '-'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -194,7 +261,7 @@ export default function HistoryPage() {
             <select
               id="filter-type"
               value={filters.type}
-              onChange={(e) => setFilters({ ...filters, type: e.target.value as any })}
+              onChange={(e) => setFilters({ ...filters, type: e.target.value as typeof filters.type })}
               className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-zinc-900"
             >
               <option value="">Todos os tipos</option>
@@ -249,60 +316,7 @@ export default function HistoryPage() {
             Movimentações ({filteredMovements.length})
           </h3>
         </div>
-        {loading ? (
-          <div className="p-8 text-center text-zinc-700">Carregando histórico...</div>
-        ) : filteredMovements.length === 0 ? (
-          <div className="p-8 text-center text-zinc-700">Nenhuma movimentação encontrada</div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead className="bg-zinc-50 border-b">
-                <tr>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Data/Hora</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Produto</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Tipo</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Quantidade</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Motivo</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Usuário</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Observações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredMovements.map((movement) => (
-                  <tr key={movement.id} className="border-b last:border-0 hover:bg-zinc-50">
-                    <td className="py-3 px-4 text-zinc-900">
-                      {new Date(movement.createdAt).toLocaleString('pt-BR')}
-                    </td>
-                    <td className="py-3 px-4 text-zinc-900">
-                      <div>
-                        <p className="font-medium text-zinc-900">{getProductName(movement.productId)}</p>
-                        <p className="text-xs text-zinc-700">SKU: {getProductSku(movement.productId)}</p>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-zinc-900">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(movement.type)}`}>
-                        {getTypeLabel(movement.type)}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-zinc-900 font-medium">
-                      {movement.type === 'ENTRY' ? '+' : movement.type === 'EXIT' ? '-' : '='}
-                      {movement.quantity}
-                    </td>
-                    <td className="py-3 px-4 text-zinc-900">
-                      {movement.reason ? getReasonLabel(movement.reason) : '-'}
-                    </td>
-                    <td className="py-3 px-4 text-zinc-900">
-                      {getUserName(movement)}
-                    </td>
-                    <td className="py-3 px-4 text-zinc-900 text-xs">
-                      {movement.notes || '-'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        {renderMovementsContent()}
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">

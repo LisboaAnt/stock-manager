@@ -104,6 +104,56 @@ export default function CategoriesPage() {
     c.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const renderCategoriesContent = () => {
+    if (loading) {
+      return <div className="p-8 text-center text-zinc-700">Carregando categorias...</div>;
+    }
+    
+    if (filteredCategories.length === 0) {
+      return (
+        <div className="p-8 text-center text-zinc-700">
+          {searchTerm ? 'Nenhuma categoria encontrada' : 'Nenhuma categoria cadastrada'}
+        </div>
+      );
+    }
+    
+    return (
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm">
+          <thead className="bg-zinc-50 border-b">
+            <tr>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Nome</th>
+              <th className="text-left py-3 px-4 font-medium text-zinc-700">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredCategories.map((category) => (
+              <tr key={category.id} className="border-b last:border-0 hover:bg-zinc-50">
+                <td className="py-3 px-4 text-zinc-900 font-medium">{category.name}</td>
+                <td className="py-3 px-4">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEdit(category)}
+                      className="text-blue-600 hover:text-blue-700 text-xs font-medium"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleDelete(category)}
+                      className="text-red-600 hover:text-red-700 text-xs font-medium"
+                    >
+                      Excluir
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
   if (!canAccess) {
     return (
       <div className="space-y-6">
@@ -148,8 +198,7 @@ export default function CategoriesPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="category-name" className="block text-sm font-medium text-zinc-700 mb-1">
-                Nome da Categoria *
-                <input
+                Nome da Categoria *<input
                   id="category-name"
                   type="text"
                   required
@@ -190,47 +239,7 @@ export default function CategoriesPage() {
             className="px-3 py-2 border border-zinc-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
           />
         </div>
-        {loading ? (
-          <div className="p-8 text-center text-zinc-700">Carregando categorias...</div>
-        ) : filteredCategories.length === 0 ? (
-          <div className="p-8 text-center text-zinc-700">
-            {searchTerm ? 'Nenhuma categoria encontrada' : 'Nenhuma categoria cadastrada'}
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead className="bg-zinc-50 border-b">
-                <tr>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Nome</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-700">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredCategories.map((category) => (
-                  <tr key={category.id} className="border-b last:border-0 hover:bg-zinc-50">
-                    <td className="py-3 px-4 text-zinc-900 font-medium">{category.name}</td>
-                    <td className="py-3 px-4">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleEdit(category)}
-                          className="text-blue-600 hover:text-blue-700 text-xs font-medium"
-                        >
-                          Editar
-                        </button>
-                        <button
-                          onClick={() => handleDelete(category)}
-                          className="text-red-600 hover:text-red-700 text-xs font-medium"
-                        >
-                          Excluir
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        {renderCategoriesContent()}
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">

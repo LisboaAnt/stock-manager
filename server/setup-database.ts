@@ -221,15 +221,16 @@ try {
         [userData.email]
       );
       
-      if (!user.rows[0].password_hash) {
+      const hasPasswordHash = user.rows[0]?.password_hash;
+      if (hasPasswordHash) {
+        console.log(`  ⏭️  Usuário já existe: ${userData.email}`);
+      } else {
         const passwordHash = await bcrypt.hash(userData.password, 10);
         await pool.query(
           'UPDATE users SET password_hash = $1 WHERE email = $2',
           [passwordHash, userData.email]
         );
         console.log(`  🔄 Senha atualizada para: ${userData.email}`);
-      } else {
-        console.log(`  ⏭️  Usuário já existe: ${userData.email}`);
       }
     }
   }

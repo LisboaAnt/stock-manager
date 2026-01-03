@@ -100,7 +100,7 @@ function getProductsData() {
       { name: 'Borracha Branca', sku: 'BOR-001', category: 'Papelaria', supplier: 'Distribuidora Central', priceCost: 0.5, priceSale: 1, minStock: 50, stock: 150 },
       { name: 'Caderno 10 Matérias', sku: 'CAD-10M', category: 'Material Escolar', supplier: 'Distribuidora Central', priceCost: 8, priceSale: 15, minStock: 20, stock: 45 },
       { name: 'Régua 30cm', sku: 'REG-30', category: 'Material Escolar', supplier: 'Distribuidora Central', priceCost: 2, priceSale: 4, minStock: 30, stock: 60 },
-      { name: 'Apontador', sku: 'APO-001', category: 'Papelaria', supplier: 'Distribuidora Central', priceCost: 1.20, priceSale: 2.50, minStock: 40, stock: 90 },
+      { name: 'Apontador', sku: 'APO-001', category: 'Papelaria', supplier: 'Distribuidora Central', priceCost: 1.2, priceSale: 2.5, minStock: 40, stock: 90 },
       
       // Alimentos
       { name: 'Arroz 5kg Tio João', sku: 'ARZ-5KG', category: 'Alimentos', supplier: 'Nestlé Brasil', priceCost: 18, priceSale: 26, minStock: 30, stock: 80 },
@@ -295,42 +295,38 @@ function printSummary(
   console.log('\n🛒 Caneta Bic Azul está na categoria Papelaria e tem vendas registradas!');
 }
 
-async function populateDatabase() {
-  try {
-    console.log('🔄 Populando banco de dados com dados de exemplo...\n');
+try {
+  console.log('🔄 Populando banco de dados com dados de exemplo...\n');
 
-    const categoryIds = await createCategories();
-    const supplierIds = await createSuppliers();
-    const productIds = await createProducts(categoryIds, supplierIds);
-    const adminUserId = await getAdminUserId();
+  const categoryIds = await createCategories();
+  const supplierIds = await createSuppliers();
+  const productIds = await createProducts(categoryIds, supplierIds);
+  const adminUserId = await getAdminUserId();
 
-    if (!adminUserId) {
-      throw new Error('Usuário admin não encontrado');
-    }
-
-    await createMovements(productIds, adminUserId);
-
-    const categories = await pool.query('SELECT COUNT(*) as count FROM categories');
-    const suppliers = await pool.query('SELECT COUNT(*) as count FROM suppliers');
-    const products = await pool.query('SELECT COUNT(*) as count FROM products');
-    const entries = getEntriesData();
-    const sales = getSalesData();
-
-    printSummary(
-      Number.parseInt(categories.rows[0].count),
-      Number.parseInt(suppliers.rows[0].count),
-      Number.parseInt(products.rows[0].count),
-      entries.length,
-      sales.length
-    );
-    
-  } catch (error) {
-    console.error('❌ Erro ao popular banco de dados:', error);
-    throw error;
-  } finally {
-    await pool.end();
+  if (!adminUserId) {
+    throw new Error('Usuário admin não encontrado');
   }
-}
 
-populateDatabase();
+  await createMovements(productIds, adminUserId);
+
+  const categories = await pool.query('SELECT COUNT(*) as count FROM categories');
+  const suppliers = await pool.query('SELECT COUNT(*) as count FROM suppliers');
+  const products = await pool.query('SELECT COUNT(*) as count FROM products');
+  const entries = getEntriesData();
+  const sales = getSalesData();
+
+  printSummary(
+    Number.parseInt(categories.rows[0].count),
+    Number.parseInt(suppliers.rows[0].count),
+    Number.parseInt(products.rows[0].count),
+    entries.length,
+    sales.length
+  );
+  
+} catch (error) {
+  console.error('❌ Erro ao popular banco de dados:', error);
+  throw error;
+} finally {
+  await pool.end();
+}
 
