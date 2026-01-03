@@ -2,7 +2,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 export async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   try {
-    const hasWindow = typeof globalThis.window !== 'undefined';
+    const hasWindow = globalThis.window !== undefined;
     const token = hasWindow ? localStorage.getItem('token') : null;
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
