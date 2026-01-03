@@ -324,14 +324,16 @@ export default function ProductsPage() {
                 </div>
                 <div>
                   <label htmlFor="product-suppliers" className="block text-sm font-medium text-zinc-700 mb-1">
-                    Fornecedores<select
-                      id="product-suppliers"
-                      multiple
-                      value={formData.supplierIds}
-                      onChange={(e) => {
-                        const selected = Array.from(e.target.selectedOptions, option => option.value);
-                        setFormData({ ...formData, supplierIds: selected });
-                      }}
+                    Fornecedores
+                  </label>
+                  <select
+                    id="product-suppliers"
+                    multiple
+                    value={formData.supplierIds}
+                    onChange={(e) => {
+                      const selected = Array.from(e.target.selectedOptions, option => option.value);
+                      setFormData({ ...formData, supplierIds: selected });
+                    }}
                     className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-zinc-900"
                     size={3}
                   >

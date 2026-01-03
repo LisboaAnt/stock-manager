@@ -1,11 +1,24 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Package, Shield, Zap, Database, Server, CheckCircle2, ArrowRight, Mail, Globe, ExternalLink, Heart, X } from "lucide-react";
 
 export default function Home() {
   const [showDonation, setShowDonation] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    if (showDonation) {
+      dialogRef.current?.showModal();
+    } else {
+      dialogRef.current?.close();
+    }
+  }, [showDonation]);
+
+  const handleClose = () => {
+    setShowDonation(false);
+  };
 
   return (
     <>
@@ -46,35 +59,28 @@ export default function Home() {
       </nav>
 
       {/* Modal de Doação */}
-      {showDonation && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <button
-            type="button"
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm border-0 cursor-default"
-            onClick={() => setShowDonation(false)}
-            aria-label="Fechar modal"
-          />
-          <div 
-            className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl relative z-10" 
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="donation-title"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-                  <Heart className="w-6 h-6 text-red-600" />
-                </div>
-                <h3 id="donation-title" className="text-2xl font-bold text-zinc-900">Apoie o Projeto</h3>
+      <dialog
+        ref={dialogRef}
+        className="bg-transparent border-0 p-0 backdrop:bg-black/50 backdrop:backdrop-blur-sm max-w-md w-full rounded-2xl"
+        aria-labelledby="donation-title"
+        onCancel={handleClose}
+      >
+        <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                <Heart className="w-6 h-6 text-red-600" />
               </div>
-              <button
-                onClick={() => setShowDonation(false)}
-                className="text-zinc-400 hover:text-zinc-600 transition-colors"
-              >
-                <X className="w-6 h-6" />
-              </button>
+              <h3 id="donation-title" className="text-2xl font-bold text-zinc-900">Apoie o Projeto</h3>
             </div>
+            <button
+              onClick={handleClose}
+              className="text-zinc-400 hover:text-zinc-600 transition-colors"
+              aria-label="Fechar modal"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
             <p className="text-zinc-700 mb-6">
               Este sistema é gratuito e de código aberto. Se você gostou e quer apoiar o desenvolvimento, 
               considere fazer uma doação via PIX.
@@ -99,9 +105,8 @@ export default function Home() {
             <p className="text-sm text-zinc-600 text-center">
               Sua contribuição ajuda a manter e melhorar o sistema. Muito obrigado! 🙏
             </p>
-          </div>
         </div>
-      )}
+      </dialog>
 
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12">
